@@ -1,10 +1,9 @@
 'use client'
 import styles from "./ui/page.module.css";
-import React, { useState } from 'react'
+import React from 'react'
 import EmblaCarousel from '@/components/carousel'
-import Modal from 'react-modal'
 import dynamic from "next/dynamic"
-import { FaPython, FaJava, FaAws, FaGitSquare, FaDocker, FaLinux, FaBug, FaCloud, FaRegStar, FaStar, FaStarHalfAlt } from 'react-icons/fa';
+import { FaPython, FaJava, FaAws, FaGitSquare, FaDocker, FaLinux, FaBug, FaCloud } from 'react-icons/fa';
 import { DiDotnet } from 'react-icons/di';
 import { PiFileCpp } from "react-icons/pi";
 import { RiNextjsLine, RiDeviceRecoverLine } from "react-icons/ri";
@@ -12,69 +11,14 @@ import { FiDatabase } from "react-icons/fi";
 import { VscTerminalPowershell } from "react-icons/vsc";
 import { MdOutlineSecurity } from "react-icons/md";
 import { SiUnrealengine } from "react-icons/si";
+import Skill from "@/components/skill";
+import Experience, {Position} from "@/components/experience";
 
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
     ssr: false
 })
 
-const Skill: React.FC<Readonly<{icon?: React.ReactNode; title?: string; rating?: number; children?: React.ReactNode}>> = ({ icon, title, rating = 0 , children}) => {
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-
-    const fullStars = Math.floor(rating);
-    const halfStar = rating % 1 >= 0.5 ? 1 : 0;
-    const emptyStars = 5 - fullStars - halfStar;
-
-    const stars = [
-        ...Array(fullStars).fill(<FaStar key="full" />),
-        ...Array(halfStar).fill(<FaStarHalfAlt key="half" />),
-        ...Array(emptyStars).fill(<FaRegStar key="empty" />)
-    ];
-
-    enum FlexDirection {
-        Row = "row",
-        RowReverse = "row-reverse",
-        Column = "column",
-        ColumnReverse = "column-reverse"
-    }
-
-    const modalStyle = {
-        overlay: {
-            backgroundColor: "rgba(0,0,0,0,0.6)",
-        },
-
-        content: {
-            top: "50%",
-            left: "50%",
-            right: "auto",
-            bottom: "auto",
-            marginRight: '50%',
-            transform: "translate(-50%, -50%)",
-            backgroundColor: "black",
-            width: "auto",
-            height: "45vh",
-            display: "flex",
-            flexDirection: FlexDirection.Column, // Workaround for typescript no overloaded error
-            gap: "10%",
-            borderRadius: "15px",
-        }
-    }
-
-    return (
-        <>
-            <div className={styles.skill} onClick={() => setModalIsOpen(true)}>
-                <div style={{fontSize: '2.5rem'}}>{icon}</div>
-                <p style={{textAlign: 'center', fontSize: '1rem'}}>{title}</p>
-                <div style={{display: 'flex', justifyContent: 'center', fontSize: '0.8rem'}}>{stars}</div>
-            </div>
-            <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} style={modalStyle}>
-                <h1 className="text-2xl font-bold text-center text-sky-400">{title}</h1>
-                <div className="w-96">{children}</div>
-                <button className="p-2 rounded bg-cyan-700 text-white" onClick={() => setModalIsOpen(false)}>Close</button>
-            </Modal>
-        </>
-    );
-};
 
 
 export default function Home() {
@@ -98,7 +42,7 @@ export default function Home() {
                     </div>
 
                     <div className={styles.sections}
-                         style={{background: "linear-gradient(90deg, #010101 20%, #379bc8 100%)"}}>
+                         style={{background: "linear-gradient(90deg, #010101 20%, #379bc8 100%)", height: "100%"}}>
                         <div className={styles.skillsContent}>
                             <h1>Skills</h1>
                             <div className={styles.skillsTable}>
@@ -236,27 +180,73 @@ export default function Home() {
                         </div>
                     </div>
 
-                    <div className={styles.sections}
+                    <div className={`${styles.sections} pb-20`}
                          style={{background: "linear-gradient(90deg, #379bc8 20%, #A3E3FF 100%)"}}>
-                        <div className={styles.skillsContent}>
+                        <div className={"flex flex-col justify-center items-center"}>
+                            <h1 className="mt-10 mb-6">Experience</h1>
+                            <Experience company="L3Harris" link="https://www.l3harris.com">
+                                <Position title="Software Engineer, Space and Airborne Systems"
+                                          startDate={new Date("2023-06-01")}>
+                                    <>Oversaw and implemented bug fixes and new features for diagnostic tools analyzing
+                                        messages within electronic warfare systems of F/A-18 series fighter jets
+                                    </>
+                                    <>Spearheaded and managed a project from its initial conceptualization, through the
+                                        various stages of development, and finally to its successful release and
+                                        delivery to the customer
+                                    </>
+                                    <>Managed the project’s database and implemented new features</>
+                                </Position>
+                            </Experience>
+
+                            <Experience company="New Jersey Army National Guard"
+                                        link="https://nationalguard.com/new-jersey">
+                                <Position title="Cyber Warfare Officer, 17A" startDate={new Date("2023-05-15")}>
+                                    <>Directed cybersecurity operations in alignment with a structured strategy to
+                                        target adversary activities and capabilities
+                                    </>
+                                    <>Hardened servers and networks coincident with penetration testing</>
+                                </Position>
+                                <Position title="Chemical Specialist, 74D" startDate={new Date("2019-04-08")}
+                                          endDate={new Date("2023-05-14")}>
+                                    <>Engaged in rigorous training sessions and practical exercises to learn and master
+                                        safety procedures and
+                                        decontamination methods
+                                    </>
+                                    <>Participated in team-based tasks and projects, which provided the opportunity to
+                                        lead diverse teams
+                                    </>
+                                </Position>
+                            </Experience>
+
+                            <Experience company="MIT Lincoln Laboratory" link="https://www.ll.mit.edu">
+                                <Position title="Mechanical Engineering Intern" startDate={new Date("2022-07-15")}
+                                          endDate={new Date("2022-08-15")}>
+                                    <>Tested material properties of silica waveguides as part of the structural and
+                                        thermal fluids group
+                                    </>
+                                    <>Developed various software solutions to streamline data analysis processes and
+                                        solve simulation problems
+                                    </>
+                                </Position>
+                            </Experience>
                         </div>
                     </div>
 
                     <div className={styles.sections}
                          style={{background: "linear-gradient(90deg, #A3E3FF 20%, #D0D199 100%)"}}>
-                        <div className={styles.skillsContent}>
+                        <div className={styles.projectsContent}>
                         </div>
                     </div>
 
                     <div className={styles.sections}
                          style={{background: "linear-gradient(90deg, #D0D199 20%, #425F40 100%)"}}>
-                        <div className={styles.skillsContent}>
+                        <div className={styles.educationAndCertsContent}>
                         </div>
                     </div>
 
                     <div className={styles.sections}
                          style={{background: "linear-gradient(90deg, #425F40 20%, #000000 100%)"}}>
-                        <div className={styles.skillsContent}>
+                        <div className={styles.contactMeContent}>
                         </div>
                     </div>
                 </EmblaCarousel>

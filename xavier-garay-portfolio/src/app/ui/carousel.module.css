@@ -51,6 +51,8 @@
     flex: 0 0 var(--slide-size);
     min-width: 0;
     padding-left: var(--slide-spacing);
+    overflow-y: auto;
+    scrollbar-width: none;
 }
 
 .slides_buttons {
