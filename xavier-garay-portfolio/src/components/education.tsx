@@ -73,7 +73,7 @@ export default function Education({ children }: { children: React.ReactNode }) {
     const certification = childArray.filter(child => child.type === Certification);
 
     return (
-        <div className="flex flex-col w-full justify-center align-middle gap-6">
+        <div className="flex flex-col w-full items-center gap-6">
             <div className={"rounded-xl w-11/12 border-indigo-700 border-2"} style={{background: "linear-gradient(to bottom right, #707FB1 0%, #404081 100%)"}}>
                 <div className={"m-4"}>
                     <h2 className={"text-5xl"}>Education</h2>
