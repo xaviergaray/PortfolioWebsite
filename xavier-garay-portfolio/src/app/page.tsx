@@ -13,6 +13,7 @@ import { MdOutlineSecurity } from "react-icons/md";
 import { SiUnrealengine } from "react-icons/si";
 import Skill from "@/components/skill";
 import Experience, {Position} from "@/components/experience";
+import Education, {School, Certification} from "@/components/education";
 
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
@@ -183,7 +184,7 @@ export default function Home() {
                     <div className={`${styles.sections} pb-20`}
                          style={{background: "linear-gradient(90deg, #379bc8 20%, #A3E3FF 100%)"}}>
                         <div className={"flex flex-col justify-center items-center"}>
-                            <h1 className="mt-10 mb-6">Experience</h1>
+                            <h1 className={"mt-10 mb-6"}>Experience</h1>
                             <Experience company="L3Harris" link="https://www.l3harris.com">
                                 <Position title="Software Engineer, Space and Airborne Systems"
                                           startDate={new Date("2023-06-01")}>
@@ -240,7 +241,67 @@ export default function Home() {
 
                     <div className={styles.sections}
                          style={{background: "linear-gradient(90deg, #D0D199 20%, #425F40 100%)"}}>
-                        <div className={styles.educationAndCertsContent}>
+                        <div className={"flex justify-center align-middle m-10 mb-20"}>
+                            <Education>
+                                <School
+                                    issuingOrganization="New Jersey Institute of Technology"
+                                    organizationLink="https://www.njit.edu"
+                                    title="M.S. Computer Science"
+                                    startDate={new Date("2023-09-13")}
+                                    graduationDate={new Date("2024-12-28")}>
+                                </School>
+
+                                <School
+                                    issuingOrganization="Rutgers University- New Brunswick"
+                                    organizationLink="https://www.rutgers.edu"
+                                    title="B.S. Mechanical Engineering"
+                                    startDate={new Date("2020-01-21")}
+                                    graduationDate={new Date("2023-05-15")}>
+                                    <>Summa Cum Laude</>
+                                    <>Awarded Best Mechanical Engineering Project</>
+                                </School>
+
+                                <Certification
+                                    issuingOrganization={"Global Information Assurance Certification (GIAC)"}
+                                    organizationLink={"https://www.giac.org"}
+                                    title={"GIAC Certified Windows Security Administrator (GCWN)"}
+                                    certLink={"https://www.giac.org/certifications/certified-windows-security-administrator-gcwn/"}>
+                                    <>Developed advanced skills in securing Microsoft Windows environments through
+                                        strategic PKI management, Group Policy, and PowerShell security
+                                    </>
+                                </Certification>
+
+                                <Certification
+                                    issuingOrganization={"Global Information Assurance Certification (GIAC)"}
+                                    organizationLink={"https://www.giac.org"}
+                                    title={"GIAC Reverse Engineering Malware (GREM)"}
+                                    certLink={"https://www.giac.org/certifications/reverse-engineering-malware-grem/"}>
+                                    <>Expertise in malware analysis and reverse engineering to safeguard IT
+                                        infrastructure against sophisticated cyber threats
+                                    </>
+                                </Certification>
+
+                                <Certification
+                                    issuingOrganization={"CompTIA"}
+                                    organizationLink={"https://www.comptia.org"}
+                                    title={"CompTIA Security+"}
+                                    certLink={"https://www.comptia.org/certifications/security"}>
+                                    <>Skilled in assessing and fortifying enterprise security postures, and adept at
+                                        managing hybrid environments including cloud, mobile, and IoT
+                                    </>
+                                </Certification>
+
+                                <Certification
+                                    issuingOrganization={"CompTIA"}
+                                    organizationLink={"https://www.comptia.org"}
+                                    title={"CompTIA Network+"}
+                                    certLink={"https://www.comptia.org/certifications/network"}>
+                                    <>Adept at deploying, managing, and troubleshooting networks across various
+                                        platforms, ensuring robust
+                                        connectivity and cybersecurity
+                                    </>
+                                </Certification>
+                            </Education>
                         </div>
                     </div>
 
