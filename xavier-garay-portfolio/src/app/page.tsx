@@ -12,14 +12,14 @@ import { VscTerminalPowershell } from "react-icons/vsc";
 import { MdOutlineSecurity } from "react-icons/md";
 import { SiUnrealengine } from "react-icons/si";
 import Skill from "@/components/skill";
-import Experience, {Position} from "@/components/experience";
-import Education, {School, Certification} from "@/components/education";
+import Experience, { Position } from "@/components/experience";
+import Education, { School, Certification } from "@/components/education";
+import Projects, { Project } from "@/components/project"
 
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
     ssr: false
 })
-
 
 
 export default function Home() {
@@ -235,7 +235,56 @@ export default function Home() {
 
                     <div className={styles.sections}
                          style={{background: "linear-gradient(90deg, #A3E3FF 20%, #D0D199 100%)"}}>
-                        <div className={styles.projectsContent}>
+                        <div>
+                            <Projects>
+                                <Project
+                                    title="AI Development Engineer Navigator"
+                                    photo="/projectsAIPhoto.webp"
+                                    alt="Photo of Artificial Intelligence brain."
+                                >
+                                    <p>Programmed an AI chatbot to serve as a consultant for any engineer designing a
+                                        system.</p>
+                                    <p>AIDEN is designed to help engineers stay ahead of the curve by providing
+                                        recommendations for how the system should be structured, allowing the engineer
+                                        to perform targeted research instead of shooting in the dark</p>
+                                </Project>
+
+                                <Project
+                                    title="Home Lab"
+                                    photo="/projectsLabPhoto.webp"
+                                    alt="Photo of conceptual network."
+                                >
+                                    <p>Leveraging the power of Raspberry Pis in conjunction with managed switches and
+                                        routers, I’ve transformed my home into a tech-savvy hub. This includes the
+                                        implementation of a local DNS server, a Network Attached Storage (NAS) system,
+                                        and the deployment of private web applications for my family’s use.</p>
+                                    <p>To ensure secure and convenient access, all these features are equipped with
+                                        remote connectivity via SSH and run smoothly with PowerShell scripting.</p>
+                                </Project>
+
+                                <Project
+                                    title="Multiplayer RPG Survival Indie Game"
+                                    photo="/projectsGamePhoto.webp"
+                                    alt="Photo of calm river through the woods."
+                                >
+                                    <p>Currently developing a multiplayer RPG/survival game using Unreal Engine.</p>
+                                    <p>The game will include several systems present in most, modern RPG games including
+                                        inventory, crafting, skills, and various quest lines that affect the
+                                        player&apos;s world</p>
+                                </Project>
+
+                                <Project
+                                    title="Autonomous Water Collection Drone"
+                                    photo="/projectsDronePhoto.webp"
+                                    alt="Photo of drone flying above beach"
+                                >
+                                    <p>Senior project for my Mechanical Engineering undergraduate degree. I was
+                                        responsible for part of the software responsible for the autonomous takeoff and
+                                        landing at a specified ground station.</p>
+                                    <p>The project ended up winning the Best Mechanical Engineering Project award at
+                                        Rutgers University that year (2023).</p>
+                                </Project>
+                            </Projects>
                         </div>
                     </div>
 
