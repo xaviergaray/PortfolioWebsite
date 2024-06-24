@@ -3,7 +3,7 @@ import styles from "./ui/page.module.css";
 import React from 'react'
 import EmblaCarousel from '@/components/carousel'
 import dynamic from "next/dynamic"
-import { FaPython, FaJava, FaAws, FaGitSquare, FaDocker, FaLinux, FaBug, FaCloud } from 'react-icons/fa';
+import { FaPython, FaJava, FaAws, FaGitSquare, FaDocker, FaLinux, FaBug, FaCloud, FaLinkedin } from 'react-icons/fa';
 import { DiDotnet } from 'react-icons/di';
 import { PiFileCpp } from "react-icons/pi";
 import { RiNextjsLine, RiDeviceRecoverLine } from "react-icons/ri";
@@ -14,7 +14,8 @@ import { SiUnrealengine } from "react-icons/si";
 import Skill from "@/components/skill";
 import Experience, { Position } from "@/components/experience";
 import Education, { School, Certification } from "@/components/education";
-import Projects, { Project } from "@/components/project"
+import Projects, { Project } from "@/components/project";
+import ContactMe, { ContactInfo } from "@/components/contact";
 
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
@@ -23,7 +24,7 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
 
 
 export default function Home() {
-    const navbarButtons = ["About Me", "Skills", "Experience", "Projects", "Education and Certifications", "Contact Me"];
+    const navbarButtons = ["About Me", "Skills", "Experience", "Projects", "Education and Certifications"];
 
     return (
         <main className={styles.main}>
@@ -354,11 +355,6 @@ export default function Home() {
                         </div>
                     </div>
 
-                    <div className={styles.sections}
-                         style={{background: "linear-gradient(90deg, #425F40 20%, #000000 100%)"}}>
-                        <div className={styles.contactMeContent}>
-                        </div>
-                    </div>
                 </EmblaCarousel>
             </MediaQuery>
 
