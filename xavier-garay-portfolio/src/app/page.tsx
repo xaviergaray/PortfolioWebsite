@@ -3,7 +3,7 @@ import styles from "./ui/page.module.css";
 import React from 'react'
 import EmblaCarousel from '@/components/carousel'
 import dynamic from "next/dynamic"
-import { FaPython, FaJava, FaAws, FaGitSquare, FaDocker, FaLinux, FaBug, FaCloud, FaLinkedin } from 'react-icons/fa';
+import { FaPython, FaJava, FaAws, FaGitSquare, FaDocker, FaLinux, FaBug, FaCloud } from 'react-icons/fa';
 import { DiDotnet } from 'react-icons/di';
 import { PiFileCpp } from "react-icons/pi";
 import { RiNextjsLine, RiDeviceRecoverLine } from "react-icons/ri";
@@ -15,7 +15,6 @@ import Skill from "@/components/skill";
 import Experience, { Position } from "@/components/experience";
 import Education, { School, Certification } from "@/components/education";
 import Projects, { Project } from "@/components/project";
-import ContactMe, { ContactInfo } from "@/components/contact";
 
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
