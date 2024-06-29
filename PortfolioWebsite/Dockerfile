@@ -16,6 +16,15 @@ COPY . .
 # Build the Next.js app
 RUN npm run build
 
+# Create a non-root user
+RUN adduser -D nonrootuser
+
+# Change the ownership of the /usr/src/app directory to the non-root user
+RUN chown -R nonrootuser:nonrootuser /usr/src/app
+
+# Switch to the non-root user
+USER nonrootuser
+
 # Expose port 3000
 EXPOSE 3000
 

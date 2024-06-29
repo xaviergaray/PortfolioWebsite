@@ -3,3 +3,6 @@ _*pycache*_
 qr_codes
 *.sqlite
 *.git*
+Dockerfile
+.dockerignore
+README.md
