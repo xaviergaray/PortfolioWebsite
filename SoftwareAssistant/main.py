@@ -74,4 +74,5 @@ def send_message_to_api():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True)
+    from gunicorn.app.wsgiapp import run
+    run()
