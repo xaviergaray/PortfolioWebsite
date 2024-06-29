@@ -352,7 +352,9 @@ export default function Home() {
                                                     <div className={"w-5/6 bg-gray-900 border-2 rounded-xl p-2"}>
                                                         <ReactMarkdown>{response}</ReactMarkdown></div>
                                                 </div>
-                                                &&
+                                            }
+
+                                            {uml &&
                                                 <div className={"flex flex-row gap-4"}>
                                                     <p className={"w-1/6"}>UML Diagram:</p>
                                                     <div className="w-5/6"><PlantUML src={uml}
