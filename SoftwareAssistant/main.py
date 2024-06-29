@@ -25,14 +25,57 @@ gpt_models = {
 
 
 # Route used for testing whether the API is in working and taking connections
-@app.route('/gpt-api-test')
+@app.route('/gpt-api/test')
 def test_message():
     return jsonify({'response': "GET Request Successful" if OPENAI_ORGANIZATION_ID is not None else ""}) 
 
 
-# Route to communicate with the API
-@app.route('/gpt-api', methods=['POST'])
-def send_message_to_api():
+# Route to communicate with the API and receive framework suggestions
+@app.route('/gpt-api/suggestions/framework', methods=['POST'])
+def framework_message_to_api():
+    data = request.get_json()
+    user = data.get('user', 'blank_user')
+    message = data.get('message', '')
+
+    if not message:
+        return jsonify({'error': 'No message provided'}), 400
+
+    stream = client.chat.completions.create(
+        model=gpt_models['cheapest'],
+        messages=
+        [
+            {
+                "role": "system",
+                "content": "Your name is Aiden."
+                           "As a systems and software consultant, your task is to recommend a technology stack that will "
+                           "meet all the necessary engineering requirements."
+                           "You are expected to suggest a suitable framework."
+                           "Write it within a section labeled ### FRAMEWORK ### at the start "
+                           "and ### ENDFRAMEWORK ### at the end."
+                           "Also create a PlantUML diagram should serve as a clear guide for engineers to develop the program."
+                           "Make sure it has arrows connecting different components where necessary."
+            },
+            {
+                "role": "user",
+                "content": message,
+            }
+        ],
+        stream=True,
+        temperature=0.2,
+        user=user,
+    )
+
+    response = ''
+    for chunk in stream:
+        if chunk.choices[0].delta.content is not None:
+            response += chunk.choices[0].delta.content
+
+    return jsonify({'response': response})
+
+
+# Route to communicate with the API and receive comments within code
+@app.route('/gpt-api/suggestions/comments', methods=['POST'])
+def comments_message_to_api():
     data = request.get_json()
     user = data.get('user', 'blank_user')
     message = data.get('message', '')
