@@ -3,15 +3,19 @@ from flask_cors import CORS
 from openai import OpenAI
 from conf import OPENAI_ORGANIZATION_ID, OPENAI_PROJECT_ID
 
+# Prepare Flask app with Cross Origin Resource Sharing
+app = Flask(__name__)
+CORS(app)
+
+
 # Connect to OpenAI client
 client = OpenAI(
     organization=OPENAI_ORGANIZATION_ID,
     project=OPENAI_PROJECT_ID,
 )
 
-app = Flask(__name__)
-CORS(app)
 
+# Dictionary of the different models, depending on which stage of development I would like to use
 gpt_models = {
     "cheapest": "gpt-3.5-turbo-0125",
     "cheaper": "gpt-3.5-turbo",
@@ -20,6 +24,13 @@ gpt_models = {
 }
 
 
+# Route used for testing whether the API is in working and taking connections
+@app.route('/gpt-api-test')
+def test_message():
+    return jsonify({'response': "GET Request Successful" if OPENAI_ORGANIZATION_ID is not None else ""}) 
+
+
+# Route to communicate with the API
 @app.route('/gpt-api', methods=['POST'])
 def send_message_to_api():
     data = request.get_json()
@@ -36,7 +47,7 @@ def send_message_to_api():
             {
                 "role": "system",
                 "content": "Your name is Aiden."
-                            "As a systems and software consultant, your task is to recommend a technology stack that will "
+                           "As a systems and software consultant, your task is to recommend a technology stack that will "
                            "meet all the necessary engineering requirements."
                            "You are expected to suggest a suitable framework."
                            "Write it within a section labeled ### FRAMEWORK ### at the start "
@@ -63,4 +74,4 @@ def send_message_to_api():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
