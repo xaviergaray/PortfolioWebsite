@@ -98,106 +98,12 @@ export default function Home() {
         <main className={styles.main}>
             <MediaQuery minWidth={1120}>
                 <EmblaCarousel navbarButtons={navbarButtons}>
-                    <div className={styles.sections}
-                         style={{background: "linear-gradient(90deg, #A3E3FF 20%, #D0D199 100%)"}}>
-                        <div>
-                            <Projects>
-                                <Project
-                                    title="AI Development Engineer Navigator"
-                                    photo="/projectsAIPhoto.webp"
-                                    alt="Photo of Artificial Intelligence brain."
-                                >
-                                    <div className={"flex flex-col justify-evenly"}>
-                                        <div>
-                                            <p>Programmed an AI chatbot to serve as a consultant for any engineer
-                                                designing
-                                                a
-                                                system.</p>
-                                            <p>AIDEN is designed to help engineers stay ahead of the curve by providing
-                                                recommendations for how the system should be structured, allowing the
-                                                engineer
-                                                to perform targeted research instead of shooting in the dark</p>
-                                        </div>
-                                        <button onClick={() => setModalIsOpen(true)}>Try it out now!</button>
-                                    </div>
-                                    <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}
-                                           style={modalStyle}>
-                                        <h1 className="text-2xl font-bold text-center text-sky-400">AIDEN</h1>
-                                        <form onSubmit={sendMessage} className={"flex flex-col gap-10"}>
-                                            <div className={"flex flex-row gap-4"}>
-                                                <p className={"w-1/6"}>Input:</p>
-                                                <input
-                                                    className={"w-3/6 bg-gray-900 border-2 rounded-xl p-2"}
-                                                    value={message}
-                                                    onChange={(e) => setMessage(e.target.value)}
-                                                />
-                                                <button className={"w-1/6 p-2 rounded bg-cyan-700 text-white"}
-                                                        type="submit">Send Message
-                                                </button>
-                                            </div>
-
-                                            <div className={"flex flex-row gap-4"}>
-                                                <p className={"w-1/6"}>Response:</p>
-                                                <div className={"w-5/6 bg-gray-900 border-2 rounded-xl p-2"}>
-                                                    <ReactMarkdown>{response}</ReactMarkdown></div>
-                                            </div>
-
-                                            <div className={"flex flex-row gap-4"}>
-                                                <p className={"w-1/6"}>UML Diagram:</p>
-                                                <div className="w-5/6"><PlantUML src={uml} alt="UML of suggested framework"/></div>
-                                            </div>
-                                        </form>
-                                        <button className="p-2 rounded bg-cyan-700 text-white"
-                                                onClick={() => setModalIsOpen(false)}>Close
-                                        </button>
-                                    </Modal>
-                                </Project>
-
-                                <Project
-                                    title="Home Lab"
-                                    photo="/projectsLabPhoto.webp"
-                                    alt="Photo of conceptual network."
-                                >
-                                    <p>Leveraging the power of Raspberry Pis in conjunction with managed switches and
-                                        routers, I’ve transformed my home into a tech-savvy hub. This includes the
-                                        implementation of a local DNS server, a Network Attached Storage (NAS) system,
-                                        and the deployment of private web applications for my family’s use.</p>
-                                    <p>To ensure secure and convenient access, all these features are equipped with
-                                        remote connectivity via SSH and run smoothly with PowerShell scripting.</p>
-                                </Project>
-
-                                <Project
-                                    title="Multiplayer RPG Survival Indie Game"
-                                    photo="/projectsGamePhoto.webp"
-                                    alt="Photo of calm river through the woods."
-                                >
-                                    <p>Currently developing a multiplayer RPG/survival game using Unreal Engine.</p>
-                                    <p>The game will include several systems present in most, modern RPG games including
-                                        inventory, crafting, skills, and various quest lines that affect the
-                                        player&apos;s world</p>
-                                </Project>
-
-                                <Project
-                                    title="Autonomous Water Collection Drone"
-                                    photo="/projectsDronePhoto.webp"
-                                    alt="Photo of drone flying above beach"
-                                >
-                                    <p>Senior project for my Mechanical Engineering undergraduate degree. I was
-                                        responsible for part of the software responsible for the autonomous takeoff and
-                                        landing at a specified ground station.</p>
-                                    <p>The project ended up winning the Best Mechanical Engineering Project award at
-                                        Rutgers University that year (2023).</p>
-                                </Project>
-                            </Projects>
-                        </div>
-                    </div>
-
                     <div className={styles.sections} style={{
                         backgroundImage: "url('/homeBackground.webp')",
                         backgroundRepeat: "no-repeat",
                         backgroundSize: "cover"
                     }}>
-                        <div className={styles.homeContent} style={{margin: "5% 0 0 5%"}}>
+                        <div style={{margin: "5% 0 0 5%"}}>
                             <h1 style={{fontWeight: "normal"}}>Hi, my name is Xavier.</h1>
                             <br/>
                             <p>I&apos;m a full-stack software engineer and Cyber Warfare Officer from Raritan, New
@@ -396,6 +302,110 @@ export default function Home() {
                         </div>
                     </div>
 
+                    <div className={styles.sections}
+                         style={{background: "linear-gradient(90deg, #A3E3FF 20%, #D0D199 100%)"}}>
+                        <div>
+                            <Projects>
+                                <Project
+                                    title="AI Development Engineer Navigator"
+                                    photo="/projectsAIPhoto.webp"
+                                    alt="Photo of Artificial Intelligence brain."
+                                >
+                                    <div className={"flex flex-col items-center gap-8"}>
+                                        <div>
+                                            <p>Programmed an AI chatbot API to serve as a consultant for any engineer
+                                                designing
+                                                a
+                                                system.</p>
+                                            <p>AIDEN is designed to help engineers stay ahead of the curve by providing
+                                                recommendations for how the system should be structured, allowing the
+                                                engineer
+                                                to perform targeted research instead of shooting in the dark</p>
+                                        </div>
+                                        <button onClick={() => setModalIsOpen(true)}
+                                                className={"bg-cyan-900 w-2/5 rounded-2xl hover:bg-cyan-950"}>Try it now!*
+                                        </button>
+                                        <p className={"w-11/12 text-center text-xs italic"}>*This version of AIDEN uses
+                                            ChatGPT 3.5 and should NOT be considered reliable. Contact me to apply this
+                                            to your project with updated GPT models.</p>
+                                    </div>
+                                    <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}
+                                           style={modalStyle}>
+                                        <h1 className="text-2xl font-bold text-center text-sky-400">AIDEN</h1>
+                                        <form onSubmit={sendMessage} className={"flex flex-col gap-10"}>
+                                            <p>Hello! My name is AIDEN. As a systems and software consultant, my task is to recommend a technology stack to satisfy your requirements. What would you like to build?</p>
+                                            <div className={"flex flex-row gap-4"}>
+                                                <p className={"w-1/6"}>Input:</p>
+                                                <input
+                                                    className={"w-3/6 bg-gray-900 border-2 rounded-xl p-2"}
+                                                    value={message}
+                                                    onChange={(e) => setMessage(e.target.value)}
+                                                />
+                                                <button className={"w-1/6 p-2 rounded bg-cyan-700 text-white"}
+                                                        type="submit">Send Message
+                                                </button>
+                                            </div>
+
+                                            {response &&
+                                                <div className={"flex flex-row gap-4"}>
+                                                    <p className={"w-1/6"}>Response:</p>
+                                                    <div className={"w-5/6 bg-gray-900 border-2 rounded-xl p-2"}>
+                                                        <ReactMarkdown>{response}</ReactMarkdown></div>
+                                                </div>
+                                                &&
+                                                <div className={"flex flex-row gap-4"}>
+                                                    <p className={"w-1/6"}>UML Diagram:</p>
+                                                    <div className="w-5/6"><PlantUML src={uml}
+                                                                                     alt="UML of suggested framework"/>
+                                                    </div>
+                                                </div>
+                                            }
+
+                                        </form>
+                                        <button className="p-2 rounded bg-cyan-700 text-white"
+                                                onClick={() => setModalIsOpen(false)}>Close
+                                        </button>
+                                    </Modal>
+                                </Project>
+
+                                <Project
+                                    title="Home Lab"
+                                    photo="/projectsLabPhoto.webp"
+                                    alt="Photo of conceptual network."
+                                >
+                                    <p>Leveraging the power of Raspberry Pis in conjunction with managed switches and
+                                        routers, I’ve transformed my home into a tech-savvy hub. This includes the
+                                        implementation of a local DNS server, a Network Attached Storage (NAS) system,
+                                        and the deployment of private web applications for my family’s use.</p>
+                                    <p>To ensure secure and convenient access, all these features are equipped with
+                                        remote connectivity via SSH and run smoothly with PowerShell scripting.</p>
+                                </Project>
+
+                                <Project
+                                    title="Multiplayer RPG Survival Indie Game"
+                                    photo="/projectsGamePhoto.webp"
+                                    alt="Photo of calm river through the woods."
+                                >
+                                    <p>Currently developing a multiplayer RPG/survival game using Unreal Engine.</p>
+                                    <p>The game will include several systems present in most, modern RPG games including
+                                        inventory, crafting, skills, and various quest lines that affect the
+                                        player&apos;s world</p>
+                                </Project>
+
+                                <Project
+                                    title="Autonomous Water Collection Drone"
+                                    photo="/projectsDronePhoto.webp"
+                                    alt="Photo of drone flying above beach"
+                                >
+                                    <p>Senior project for my Mechanical Engineering undergraduate degree. I was
+                                        responsible for part of the software responsible for the autonomous takeoff and
+                                        landing at a specified ground station.</p>
+                                    <p>The project ended up winning the Best Mechanical Engineering Project award at
+                                        Rutgers University that year (2023).</p>
+                                </Project>
+                            </Projects>
+                        </div>
+                    </div>
 
                     <div className={styles.sections}
                          style={{background: "linear-gradient(90deg, #D0D199 20%, #425F40 100%)"}}>
