@@ -1,6 +1,6 @@
 'use client'
 import styles from "./ui/page.module.css";
-import React from 'react'
+import React, { FormEvent, useState } from 'react'
 import EmblaCarousel from '@/components/carousel'
 import dynamic from "next/dynamic"
 import { FaPython, FaJava, FaAws, FaGitSquare, FaDocker, FaLinux, FaBug, FaCloud } from 'react-icons/fa';
@@ -15,6 +15,9 @@ import Skill from "@/components/skill";
 import Experience, { Position } from "@/components/experience";
 import Education, { School, Certification } from "@/components/education";
 import Projects, { Project } from "@/components/project";
+import Modal from "react-modal";
+import ReactMarkdown from 'react-markdown';
+import PlantUML from 'react-plantuml';
 
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
@@ -25,10 +28,170 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
 export default function Home() {
     const navbarButtons = ["About Me", "Skills", "Experience", "Projects", "Education and Certifications"];
 
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [message, setMessage] = useState('');
+    const [user, setUser] = useState('blank_user');
+    const [response, setResponse] = useState('');
+    const [uml, setUml] = useState('');
+
+    const sendMessage = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        const res = await fetch('http://127.0.0.1:5000/gpt-api', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user: 'your_user',
+                message: message
+            })
+        });
+
+        const data = await res.json();
+        const fullResponse = data.response;
+
+        // Extract the framework section
+        const startFramework = fullResponse.indexOf('### FRAMEWORK ###');
+        const endFramework = fullResponse.indexOf('### ENDFRAMEWORK ###');
+        const frameworkResponse = fullResponse.slice(startFramework + 17, endFramework).trim();
+
+        // Extract the UML section
+        const startUml = fullResponse.indexOf('@startuml');
+        const endUml = fullResponse.indexOf('@enduml');
+        const umlResponse = fullResponse.slice(startUml, endUml+7).trim();
+
+        setResponse(frameworkResponse);
+        setUml(umlResponse);
+    };
+
+    enum FlexDirection {
+        Row = "row",
+        RowReverse = "row-reverse",
+        Column = "column",
+        ColumnReverse = "column-reverse"
+    }
+
+    const modalStyle = {
+        overlay: {
+            backgroundColor: "rgba(0,0,0,0,0.6)",
+        },
+
+        content: {
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            marginRight: '50%',
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "black",
+            width: "50vw",
+            height: "60vh",
+            display: "flex",
+            flexDirection: FlexDirection.Column, // Workaround for typescript no overloaded error
+            gap: "10%",
+            borderRadius: "15px",
+        }
+    }
+
     return (
         <main className={styles.main}>
             <MediaQuery minWidth={1120}>
                 <EmblaCarousel navbarButtons={navbarButtons}>
+                    <div className={styles.sections}
+                         style={{background: "linear-gradient(90deg, #A3E3FF 20%, #D0D199 100%)"}}>
+                        <div>
+                            <Projects>
+                                <Project
+                                    title="AI Development Engineer Navigator"
+                                    photo="/projectsAIPhoto.webp"
+                                    alt="Photo of Artificial Intelligence brain."
+                                >
+                                    <div className={"flex flex-col justify-evenly"}>
+                                        <div>
+                                            <p>Programmed an AI chatbot to serve as a consultant for any engineer
+                                                designing
+                                                a
+                                                system.</p>
+                                            <p>AIDEN is designed to help engineers stay ahead of the curve by providing
+                                                recommendations for how the system should be structured, allowing the
+                                                engineer
+                                                to perform targeted research instead of shooting in the dark</p>
+                                        </div>
+                                        <button onClick={() => setModalIsOpen(true)}>Try it out now!</button>
+                                    </div>
+                                    <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}
+                                           style={modalStyle}>
+                                        <h1 className="text-2xl font-bold text-center text-sky-400">AIDEN</h1>
+                                        <form onSubmit={sendMessage} className={"flex flex-col gap-10"}>
+                                            <div className={"flex flex-row gap-4"}>
+                                                <p className={"w-1/6"}>Input:</p>
+                                                <input
+                                                    className={"w-3/6 bg-gray-900 border-2 rounded-xl p-2"}
+                                                    value={message}
+                                                    onChange={(e) => setMessage(e.target.value)}
+                                                />
+                                                <button className={"w-1/6 p-2 rounded bg-cyan-700 text-white"}
+                                                        type="submit">Send Message
+                                                </button>
+                                            </div>
+
+                                            <div className={"flex flex-row gap-4"}>
+                                                <p className={"w-1/6"}>Response:</p>
+                                                <div className={"w-5/6 bg-gray-900 border-2 rounded-xl p-2"}>
+                                                    <ReactMarkdown>{response}</ReactMarkdown></div>
+                                            </div>
+
+                                            <div className={"flex flex-row gap-4"}>
+                                                <p className={"w-1/6"}>UML Diagram:</p>
+                                                <div className="w-5/6"><PlantUML src={uml} alt="UML of suggested framework"/></div>
+                                            </div>
+                                        </form>
+                                        <button className="p-2 rounded bg-cyan-700 text-white"
+                                                onClick={() => setModalIsOpen(false)}>Close
+                                        </button>
+                                    </Modal>
+                                </Project>
+
+                                <Project
+                                    title="Home Lab"
+                                    photo="/projectsLabPhoto.webp"
+                                    alt="Photo of conceptual network."
+                                >
+                                    <p>Leveraging the power of Raspberry Pis in conjunction with managed switches and
+                                        routers, I’ve transformed my home into a tech-savvy hub. This includes the
+                                        implementation of a local DNS server, a Network Attached Storage (NAS) system,
+                                        and the deployment of private web applications for my family’s use.</p>
+                                    <p>To ensure secure and convenient access, all these features are equipped with
+                                        remote connectivity via SSH and run smoothly with PowerShell scripting.</p>
+                                </Project>
+
+                                <Project
+                                    title="Multiplayer RPG Survival Indie Game"
+                                    photo="/projectsGamePhoto.webp"
+                                    alt="Photo of calm river through the woods."
+                                >
+                                    <p>Currently developing a multiplayer RPG/survival game using Unreal Engine.</p>
+                                    <p>The game will include several systems present in most, modern RPG games including
+                                        inventory, crafting, skills, and various quest lines that affect the
+                                        player&apos;s world</p>
+                                </Project>
+
+                                <Project
+                                    title="Autonomous Water Collection Drone"
+                                    photo="/projectsDronePhoto.webp"
+                                    alt="Photo of drone flying above beach"
+                                >
+                                    <p>Senior project for my Mechanical Engineering undergraduate degree. I was
+                                        responsible for part of the software responsible for the autonomous takeoff and
+                                        landing at a specified ground station.</p>
+                                    <p>The project ended up winning the Best Mechanical Engineering Project award at
+                                        Rutgers University that year (2023).</p>
+                                </Project>
+                            </Projects>
+                        </div>
+                    </div>
+
                     <div className={styles.sections} style={{
                         backgroundImage: "url('/homeBackground.webp')",
                         backgroundRepeat: "no-repeat",
@@ -233,60 +396,6 @@ export default function Home() {
                         </div>
                     </div>
 
-                    <div className={styles.sections}
-                         style={{background: "linear-gradient(90deg, #A3E3FF 20%, #D0D199 100%)"}}>
-                        <div>
-                            <Projects>
-                                <Project
-                                    title="AI Development Engineer Navigator"
-                                    photo="/projectsAIPhoto.webp"
-                                    alt="Photo of Artificial Intelligence brain."
-                                >
-                                    <p>Programmed an AI chatbot to serve as a consultant for any engineer designing a
-                                        system.</p>
-                                    <p>AIDEN is designed to help engineers stay ahead of the curve by providing
-                                        recommendations for how the system should be structured, allowing the engineer
-                                        to perform targeted research instead of shooting in the dark</p>
-                                </Project>
-
-                                <Project
-                                    title="Home Lab"
-                                    photo="/projectsLabPhoto.webp"
-                                    alt="Photo of conceptual network."
-                                >
-                                    <p>Leveraging the power of Raspberry Pis in conjunction with managed switches and
-                                        routers, I’ve transformed my home into a tech-savvy hub. This includes the
-                                        implementation of a local DNS server, a Network Attached Storage (NAS) system,
-                                        and the deployment of private web applications for my family’s use.</p>
-                                    <p>To ensure secure and convenient access, all these features are equipped with
-                                        remote connectivity via SSH and run smoothly with PowerShell scripting.</p>
-                                </Project>
-
-                                <Project
-                                    title="Multiplayer RPG Survival Indie Game"
-                                    photo="/projectsGamePhoto.webp"
-                                    alt="Photo of calm river through the woods."
-                                >
-                                    <p>Currently developing a multiplayer RPG/survival game using Unreal Engine.</p>
-                                    <p>The game will include several systems present in most, modern RPG games including
-                                        inventory, crafting, skills, and various quest lines that affect the
-                                        player&apos;s world</p>
-                                </Project>
-
-                                <Project
-                                    title="Autonomous Water Collection Drone"
-                                    photo="/projectsDronePhoto.webp"
-                                    alt="Photo of drone flying above beach"
-                                >
-                                    <p>Senior project for my Mechanical Engineering undergraduate degree. I was
-                                        responsible for part of the software responsible for the autonomous takeoff and
-                                        landing at a specified ground station.</p>
-                                    <p>The project ended up winning the Best Mechanical Engineering Project award at
-                                        Rutgers University that year (2023).</p>
-                                </Project>
-                            </Projects>
-                        </div>
-                    </div>
 
                     <div className={styles.sections}
                          style={{background: "linear-gradient(90deg, #D0D199 20%, #425F40 100%)"}}>
