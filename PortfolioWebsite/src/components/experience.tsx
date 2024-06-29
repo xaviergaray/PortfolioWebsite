@@ -13,7 +13,7 @@ export function Position({ title, children, startDate, endDate }: Readonly<Posit
     return (
         <div className={"flex flex-col justify-center align-middle text-gray-200"}>
             <div className="flex flex-row w-11/12 justify-between ml-3">
-                <h3 className="mb-3">{title}</h3>
+                <h3 className="mb-3 italic text-lg">{title}</h3>
                 {endDate ?
                     <p>{months[startDate.getMonth()]} {startDate.getFullYear()} - {months[endDate.getMonth()]} {endDate.getFullYear()}</p>
                     :

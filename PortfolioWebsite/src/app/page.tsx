@@ -142,7 +142,7 @@ export default function Home() {
                                             <li>Database management systems</li>
                                             <li>Web Services</li>
                                             <li>Networking systems</li>
-                                            <li>Pandas, Matplotlib, NumPy, Django, Flask, OpenCV, sqlite3</li>
+                                            <li>Pandas, Matplotlib, NumPy, Django, Flask, OpenCV, sqlite3, and more!</li>
                                         </ul>
                                     </Skill>
                                     <Skill icon={<FaJava/>} title="Java" rating={3.5}>
@@ -334,6 +334,8 @@ export default function Home() {
                                         <h1 className="text-2xl font-bold text-center text-sky-400">AIDEN</h1>
                                         <form onSubmit={sendMessage} className={"flex flex-col gap-10"}>
                                             <p>Hello! My name is AIDEN. As a systems and software consultant, my task is to recommend a technology stack to satisfy your requirements. What would you like to build?</p>
+                                            <p>You can say things like <q>Inventory Management System.</q> If you are unhappy with the response, try asking again!</p>
+                                            <ln className={"w-full bg-amber-50 h-0.5"}></ln>
                                             <div className={"flex flex-row gap-4"}>
                                                 <p className={"w-1/6"}>Input:</p>
                                                 <input
