@@ -37,14 +37,14 @@ export default function Home() {
     const sendMessage = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const res = await fetch('http://127.0.0.1:5000/gpt-api', {
+        const res = await fetch('http://127.0.0.1:5000/gpt-api/suggestions/framework', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                user: 'your_user',
-                message: message
+                user: user,
+                message: message,
             })
         });
 
@@ -66,10 +66,7 @@ export default function Home() {
     };
 
     enum FlexDirection {
-        Row = "row",
-        RowReverse = "row-reverse",
         Column = "column",
-        ColumnReverse = "column-reverse"
     }
 
     const modalStyle = {
@@ -486,7 +483,7 @@ export default function Home() {
                     backgroundRepeat: "no-repeat",
                     backgroundSize: "cover"
                 }}>
-                    <div className={styles.homeContent} style={{margin: "5% 0 0 5%"}}>
+                    <div style={{margin: "5% 0 0 5%"}}>
                         <h1 style={{fontWeight: "normal"}}>Hi, my name is Xavier.</h1>
                         <br/>
                         <p>I&apos;m a full-stack software engineer and Cyber Warfare Officer from Raritan, New
