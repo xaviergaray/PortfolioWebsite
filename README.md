@@ -6,7 +6,8 @@ There are several services intended to be ran on this website to include the fol
   - Contains the website intended to be seen by potential employers and communicate with other services in this repository
   - Written with NextJS, Typescript, and occasionally Tailwind CSS
 - **AI Development Engineer Navigator**
-    - AI Chatbot designed to serve as a consultant for systems/software engineers and to help create onboarding documents
+    - AI Chatbot API designed to serve as a consultant for systems/software engineers and to help create onboarding documents
+    - Written in Python using Flask
     - Capabilities
       - Describe frameworks/tech stacks that could solve a problem
       - Draw PlantUML diagram related to the suggestions
