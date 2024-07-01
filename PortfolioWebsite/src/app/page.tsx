@@ -18,14 +18,18 @@ import Projects, { Project } from "@/components/project";
 import Modal from "react-modal";
 import ReactMarkdown from 'react-markdown';
 import PlantUML from 'react-plantuml';
+import { push } from '@socialgouv/matomo-next';
 
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
     ssr: false
 })
 
-
 export default function Home() {
+    if (typeof window !== 'undefined') {
+        push(['trackEvent', 'home', 'page load']);
+    }
+
     const navbarButtons = ["About Me", "Skills", "Experience", "Projects", "Education and Certifications"];
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -35,6 +39,10 @@ export default function Home() {
     const [uml, setUml] = useState('');
 
     const sendMessage = async (event: FormEvent<HTMLFormElement>) => {
+        if (typeof window !== 'undefined') {
+            push(['trackEvent', 'api call', 'framework advice']);
+        }
+
         event.preventDefault();
 
         const res = await fetch('http://127.0.0.1:5000/gpt-api/suggestions/framework', {

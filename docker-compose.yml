@@ -1,13 +1,53 @@
 version: '3.8'
 
 services:
+  reverse-proxy:
+    build: ./Nginx
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+      - "8082:8082"
+    volumes:
+      - ./Nginx/logs:/var/log/nginx
+    depends_on:
+      - portfolio-website
+      - aiden
+      - matomo
+      - db
+
   portfolio-website:
     build: ./PortfolioWebsite
-    ports:
-      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_MATOMO_URL="http://localhost:8000"
+      - NEXT_PUBLIC_MATOMO_SITE_ID="1"
+    depends_on:
+      - matomo
+
   aiden:
     build: ./SoftwareAssistant
-    ports:
-      - "5000:5000"
     env_file:
       - .env
+
+  matomo:
+    image: matomo
+    volumes:
+      - matomo:/var/www/html
+    environment:
+      - MATOMO_DATABASE_HOST=db
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    command: --max-allowed-packet=64MB
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: matomo
+      MYSQL_USER: matomo
+      MYSQL_PASSWORD: matomo
+    volumes:
+      - db:/var/lib/mysql
+
+volumes:
+  matomo:
+  db:
