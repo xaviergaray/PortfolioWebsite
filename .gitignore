@@ -1,7 +1,9 @@
 .idea
 Content
 **/.env*
-
+**/.venv
+Nginx/logs
+__pycache__
 
 ## From JetBrains IDE
 # Default ignored files
