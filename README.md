@@ -12,6 +12,7 @@ There are several services intended to be ran on this website to include the fol
       - Describe frameworks/tech stacks that could solve a problem
       - Draw PlantUML diagram related to the suggestions
       - *TODO:* Provide commenting for existing source code
+      - *TODO:* Implement RAG to offer C++ specific suggestions
 - **nginx**
   - A proxy server to be able to have more control over how requests are routed
 - **Matomo**
