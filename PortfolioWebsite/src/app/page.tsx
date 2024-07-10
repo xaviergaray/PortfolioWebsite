@@ -45,11 +45,8 @@ export default function Home() {
 
         event.preventDefault();
 
-        const res = await fetch('http://localhost:8081/gpt-api/suggestions/framework', {
+        const res = await fetch('http://localhost/api', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
             body: JSON.stringify({
                 user: user,
                 message: message,
@@ -57,20 +54,11 @@ export default function Home() {
         });
 
         const data = await res.json();
-        const fullResponse = data.response;
 
-        // Extract the framework section
-        const startFramework = fullResponse.indexOf('### FRAMEWORK ###');
-        const endFramework = fullResponse.indexOf('### ENDFRAMEWORK ###');
-        const frameworkResponse = fullResponse.slice(startFramework + 17, endFramework).trim();
+        console.log(data);
 
-        // Extract the UML section
-        const startUml = fullResponse.indexOf('@startuml');
-        const endUml = fullResponse.indexOf('@enduml');
-        const umlResponse = fullResponse.slice(startUml, endUml+7).trim();
-
-        setResponse(frameworkResponse);
-        setUml(umlResponse);
+        setResponse(data.frameworkResponse);
+        setUml(data.umlResponse);
     };
 
     enum FlexDirection {
