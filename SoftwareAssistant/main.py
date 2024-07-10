@@ -75,7 +75,17 @@ def framework_message_to_api(item: Item):
             if chunk.choices[0].delta.content is not None:
                 response += chunk.choices[0].delta.content
 
-        return {"response": response}
+        # Extract the framework section
+        startFramework = response.find('### FRAMEWORK ###')
+        endFramework = response.find('### ENDFRAMEWORK ###')
+        frameworkResponse = response[startFramework + 17 : endFramework].strip()
+
+        # Extract the UML section
+        startUml = response.find('@startuml')
+        endUml = response.find('@enduml')
+        umlResponse = response[startUml : endUml + 7].strip()
+
+        return {"frameworkResponse": frameworkResponse, "umlResponse": umlResponse}
 
     except Exception as e:
         return {"error": 'An error occurred: {}'.format(str(e))}, 500
