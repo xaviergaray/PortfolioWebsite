@@ -20,10 +20,26 @@ services:
     depends_on:
       - matomo
 
+
+  ollama-embedding:
+    build: ./Ollama/Embeddings
+    volumes:
+      - ollama-embedding:/root/.ollama
+
+
+  ollama-query:
+    build: ./Ollama/Query
+    image: ollama/ollama:latest
+    volumes:
+      - ollama-query:/root/.ollama
+
+
   aiden:
     build: ./SoftwareAssistant
     env_file:
       - .env
+    depends_on:
+      - ollama-embedding
 
   matomo:
     image: matomo
@@ -48,3 +64,5 @@ services:
 volumes:
   matomo:
   db:
+  ollama-embedding:
+  ollama-query:

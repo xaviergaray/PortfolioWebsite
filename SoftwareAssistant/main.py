@@ -4,6 +4,8 @@ from openai import OpenAI
 from conf import OPENAI_ORGANIZATION_ID, OPENAI_PROJECT_ID
 from pydantic import BaseModel
 from typing import Optional
+from RAG.query import query_rag
+
 
 # Prepare FastAPI app with Cross Origin Resource Sharing
 app = FastAPI()
@@ -15,28 +17,35 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Connect to OpenAI client
 client = OpenAI(
     organization=OPENAI_ORGANIZATION_ID,
     project=OPENAI_PROJECT_ID,
 )
 
+
 # Dictionary of the different models, depending on which stage of development I would like to use
-gpt_models = {
+ai_models = {
     "cheapest": "gpt-3.5-turbo-0125",
     "cheaper": "gpt-3.5-turbo",
     "expensive": "gpt-4o",
     "most-expensive": "gpt-4-turbo",
+    "RAG-Mistral": "mistral"
 }
+
 
 class Item(BaseModel):
     user: Optional[str] = 'blank_user'
     message: str
+    model: str
+
 
 # Route used for testing whether the API is in working and taking connections
 @app.get('/gpt-api/test')
 def test_message():
     return {"response": "GET Request Successful" if OPENAI_ORGANIZATION_ID is not None else "Error: No OpenAI Organization ID found."}
+
 
 # Route to communicate with the API and receive framework suggestions
 @app.post('/gpt-api/suggestions/framework')
@@ -46,7 +55,7 @@ def framework_message_to_api(item: Item):
 
     try:
         stream = client.chat.completions.create(
-            model=gpt_models['cheapest'],
+            model=ai_models['cheapest'],
             messages=
             [
                 {
@@ -76,19 +85,31 @@ def framework_message_to_api(item: Item):
                 response += chunk.choices[0].delta.content
 
         # Extract the framework section
-        startFramework = response.find('### FRAMEWORK ###')
-        endFramework = response.find('### ENDFRAMEWORK ###')
-        frameworkResponse = response[startFramework + 17 : endFramework].strip()
+        startText = response.find('### FRAMEWORK ###')
+        endText = response.find('### ENDFRAMEWORK ###')
+        textualResponse = response[startText + 17 : endText].strip()
 
         # Extract the UML section
         startUml = response.find('@startuml')
         endUml = response.find('@enduml')
         umlResponse = response[startUml : endUml + 7].strip()
 
-        return {"frameworkResponse": frameworkResponse, "umlResponse": umlResponse}
+        return {"textualResponse": textualResponse, "umlResponse": umlResponse}
 
     except Exception as e:
         return {"error": 'An error occurred: {}'.format(str(e))}, 500
+
+
+# Route to communicate with the API and receive programming suggestions
+@app.post('/gpt-api/suggestions/cpp')
+def suggestions_cpp_to_api(item: Item):
+    if not item.message:
+        return {"error": 'No message provided'}, 400
+
+    response, _ = query_rag(item.message, item.model) if item.model else query_rag(item.message)
+
+    return {"textualResponse": response}
+
 
 # Route to communicate with the API and receive comments within code
 @app.post('/gpt-api/suggestions/comments')
@@ -97,7 +118,7 @@ def comments_message_to_api(item: Item):
         return {"error": 'No message provided'}, 400
 
     stream = client.chat.completions.create(
-        model=gpt_models['cheapest'],
+        model=ai_models['cheapest'],
         messages=
         [
             {

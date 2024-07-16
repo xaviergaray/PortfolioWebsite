@@ -32,24 +32,45 @@ export default function Home() {
 
     const navbarButtons = ["About Me", "Skills", "Experience", "Projects", "Education and Certifications"];
 
+    const apiEndpoints = ["framework", "cpp"]
+    const apiEndpointDisplayName = ["Framework", "C++"]
+    const apiEndpointExample = ["Inventory Management System.", "How do I create a class?"]
+    const apiModels = ["gpt-3.5-turbo-0125", "RAG-mistral"]
+    const apiModelsDisplayName = ["OpenAI GPT 3.5", "Local Ollama Mistral"]
+
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [message, setMessage] = useState('');
     const [user, setUser] = useState('blank_user');
     const [response, setResponse] = useState('');
     const [uml, setUml] = useState('');
+    const [endpoint, setEndpoint] = useState(0);
+    const [model, setModel] = useState(0);
+
+    const handleClickAPIEndpoint = () => {
+        setEndpoint((endpoint + 1) % apiEndpoints.length);
+    }
+
+    const handleClickAPIModel = () => {
+        setModel((model + 1) % apiModels.length);
+    }
 
     const sendMessage = async (event: FormEvent<HTMLFormElement>) => {
-        if (typeof window !== 'undefined') {
-            push(['trackEvent', 'api call', 'framework advice']);
-        }
-
         event.preventDefault();
+
+        setUml('')
+        setResponse('Retrieving API Response...')
+
+        if (typeof window !== 'undefined') {
+            push(['trackEvent', 'api call', apiEndpointDisplayName[endpoint]]);
+        }
 
         const res = await fetch('http://localhost/api', {
             method: 'POST',
             body: JSON.stringify({
                 user: user,
                 message: message,
+                apiEndpoint: apiEndpoints[endpoint],
+                apiModel: apiModels[model],
             })
         });
 
@@ -57,7 +78,7 @@ export default function Home() {
 
         console.log(data);
 
-        setResponse(data.frameworkResponse);
+        setResponse(data.textualResponse);
         setUml(data.umlResponse);
     };
 
@@ -319,15 +340,29 @@ export default function Home() {
                                                 className={"bg-cyan-900 w-2/5 rounded-2xl hover:bg-cyan-950"}>Try it now!*
                                         </button>
                                         <p className={"w-11/12 text-center text-xs italic"}>*This version of AIDEN uses
-                                            ChatGPT 3.5 and should NOT be considered reliable. Contact me to apply this
-                                            to your project with updated GPT models.</p>
+                                            OpenAI ChatGPT 3.5 or models run on a local machine and should NOT be considered reliable. Contact me to apply this
+                                            to your project with updated OpenAI GPT or local models.</p>
                                     </div>
                                     <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}
                                            style={modalStyle}>
                                         <h1 className="text-2xl font-bold text-center text-sky-400">AIDEN</h1>
                                         <form onSubmit={sendMessage} className={"flex flex-col gap-10"}>
-                                            <p>Hello! My name is AIDEN. As a systems and software consultant, my task is to recommend a technology stack to satisfy your requirements. What would you like to build?</p>
-                                            <p>You can say things like <q>Inventory Management System.</q> If you are unhappy with the response, try asking again!</p>
+                                            <div className={"flex flex-col items-center"}>
+                                                <p>Click the buttons below to change desired service and querying
+                                                    model!</p>
+                                                <div className={"flex flex-row w-3/4 justify-around"}>
+                                                    <button type="button" onClick={handleClickAPIEndpoint}
+                                                            className={"w-1/4 p-2 rounded bg-cyan-700 text-white"}>{apiEndpointDisplayName[endpoint]}</button>
+                                                    <button type="button" onClick={handleClickAPIModel}
+                                                            className={"w-1/4 p-2 rounded bg-cyan-700 text-white"}>{apiModelsDisplayName[model]}</button>
+                                                </div>
+                                            </div>
+                                            <div className={"w-full bg-amber-50 h-0.5"}></div>
+                                            <p>Hello! My name is AIDEN. As a systems and software consultant, my task is
+                                                to recommend a technology stack to satisfy your requirements. What would
+                                                you like to build?</p>
+                                            <p>You can say things like <q>{apiEndpointExample[endpoint]}</q> If you are
+                                                unhappy with the response, try asking again!</p>
                                             <div className={"w-full bg-amber-50 h-0.5"}></div>
                                             <div className={"flex flex-row gap-4"}>
                                                 <p className={"w-1/6"}>Input:</p>
