@@ -7,6 +7,11 @@ export async function GET() {
 
 export async function POST(req: Request) {
     const data = await req.json();
+    const apiModelsToEndpoint = ["gpt-3.5-turbo-0125", "RAG-mistral"];
+
+    if (data.apiModel >= apiModelsToEndpoint.length) {
+        return NextResponse.json({error: 'Invalid model number'})
+    }
 
     try {
         const response = await fetch(`http://aiden:8000/gpt-api/suggestions/${data.apiEndpoint}`, {
@@ -17,7 +22,7 @@ export async function POST(req: Request) {
             body: JSON.stringify({
                 user: data.user,
                 message: data.message,
-                model: data.apiModel,
+                model: apiModelsToEndpoint[data.apiModel],
             })
         });
 

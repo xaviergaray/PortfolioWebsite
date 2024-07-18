@@ -32,11 +32,11 @@ export default function Home() {
 
     const navbarButtons = ["About Me", "Skills", "Experience", "Projects", "Education and Certifications"];
 
-    const apiEndpoints = ["framework", "cpp"]
-    const apiEndpointDisplayName = ["Framework", "C++"]
-    const apiEndpointExample = ["Inventory Management System.", "How do I create a class?"]
-    const apiModels = ["gpt-3.5-turbo-0125", "RAG-mistral"]
-    const apiModelsDisplayName = ["OpenAI GPT 3.5", "Local Ollama Mistral"]
+    const apiEndpoints = ["framework", "cpp"];
+    const apiEndpointDisplayName = ["Framework", "C++"];
+    const apiEndpointExample = ["Inventory Management System.", "How do I create a class?"];
+
+    const apiModelsDisplayName = ["OpenAI GPT 3.5", "Local Ollama Mistral"]; // Ensure to update app/route.tsx
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [message, setMessage] = useState('');
@@ -51,7 +51,7 @@ export default function Home() {
     }
 
     const handleClickAPIModel = () => {
-        setModel((model + 1) % apiModels.length);
+        setModel((model + 1) % apiModelsDisplayName.length);
     }
 
     const sendMessage = async (event: FormEvent<HTMLFormElement>) => {
@@ -70,7 +70,7 @@ export default function Home() {
                 user: user,
                 message: message,
                 apiEndpoint: apiEndpoints[endpoint],
-                apiModel: apiModels[model],
+                apiModel: model,
             })
         });
 

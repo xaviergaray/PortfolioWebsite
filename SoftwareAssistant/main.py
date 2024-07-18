@@ -108,7 +108,7 @@ def suggestions_cpp_to_api(item: Item):
 
     response, _ = query_rag(item.message, item.model) if item.model else query_rag(item.message)
 
-    return {"textualResponse": response}
+    return {"textualResponse": response.content}
 
 
 # Route to communicate with the API and receive comments within code
