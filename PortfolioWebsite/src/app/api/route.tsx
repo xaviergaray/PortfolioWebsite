@@ -29,7 +29,6 @@ export async function POST(req: Request) {
         const jsonResponse = await response.json();
         return NextResponse.json(jsonResponse);
     } catch (error) {
-        console.error(error.message);
-        return NextResponse.json({error: error.message });
+        return NextResponse.json({error: error });
     }
 }
