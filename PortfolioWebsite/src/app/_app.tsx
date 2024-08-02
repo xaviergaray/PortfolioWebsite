@@ -12,6 +12,18 @@ function MyApp({ Component, pageProps }: AppProps) {
             siteId: MATOMO_SITE_ID,
             disableCookies: true,
         });
+
+        const fetchData = async () => {
+            try {
+                let res = await fetch(`http://localhost/api`, { cache: 'no-store' });
+                let data = await res.json();
+                console.log(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
     }, []);
 
     return <Component {...pageProps} />;

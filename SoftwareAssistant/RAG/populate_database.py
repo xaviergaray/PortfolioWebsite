@@ -7,10 +7,11 @@ from multiprocessing import Pool
 import glob
 import os
 import shutil
+import math
 
 
-DATA_PATH = "./data/Cpp/MicrosoftDocs/cpp"
-CHROMA_PATH = "/app/RAG/chroma"
+DATA_PATH = "/app/RAG/data/"
+RAG_TOPICS = [name for name in os.listdir(DATA_PATH) if os.path.isdir(os.path.join(DATA_PATH, name))]
 
 
 def main():
@@ -19,17 +20,24 @@ def main():
     parser.add_argument("--reset", action="store_true", help="Reset the database.")
     args = parser.parse_args()
     if args.reset:
-        print("✨ Clearing Database")
-        clear_database()
+        for TOPIC in RAG_TOPICS:
+            chroma_path = data_path + "/chroma"
+            print(f"Clearing Database {chroma_path}")
+            clear_database()
+    for TOPIC in RAG_TOPICS:
+        print(f"Populating database for {TOPIC}")
+        data_path = f"{DATA_PATH}{TOPIC}"
+        paths = glob.glob(os.path.join(data_path, "**/*.md"), recursive=True)
+        # Load all documents in parallel
+        documents = load_documents(paths)
+        chunks = split_documents(documents)
+        for chunk_subset in [chunks[i:i + 35000] for i in range(0, len(chunks), 35000)]:
+            source_start = chunk_subset[0].metadata.get("source")
+            source_end = chunk_subset[-1].metadata.get("source")
 
-    # Create (or update) the data store.
-    # Get a list of all .md files in DATA_PATH
-    paths = glob.glob(os.path.join(DATA_PATH, "**/*.md"), recursive=True)
-    # Load all documents in parallel
-    documents = load_documents(paths)
-    chunks = split_documents(documents)
-    add_to_chroma(chunks)
-
+            print(f"Storing chunks from {source_start} to {source_end}...")
+            add_to_chroma(chunk_subset, data_path + "/chroma")
+        print("Done.")
 
 def load_document(file_path: str) -> Document:
     # Load a single document
@@ -38,7 +46,7 @@ def load_document(file_path: str) -> Document:
     return Document(content, metadata={"source": file_path})
 
 
-def load_documents(paths: list[str]):
+def load_documents(paths: list[str])-> list[Document]:
     print("Loading documents...")
     # Use multiprocessing to load documents in parallel
     with Pool(processes=os.cpu_count()) as pool:
@@ -62,9 +70,9 @@ def get_embedding_function():
     return embeddings
 
 
-def add_to_chroma(chunks: list[Document]):
+def add_to_chroma(chunks: list[Document], chroma_path):
     db = Chroma(
-        persist_directory=CHROMA_PATH,
+        persist_directory=chroma_path,
         embedding_function=get_embedding_function(),
     )
 
@@ -118,9 +126,9 @@ def calculate_chunk_ids(chunks):
     return chunks
 
 
-def clear_database():
-    if os.path.exists(CHROMA_PATH):
-        shutil.rmtree(CHROMA_PATH)
+def clear_database(chroma_path):
+    if os.path.exists(chroma_path):
+        shutil.rmtree(chroma_path)
 
 
 if __name__ == "__main__":

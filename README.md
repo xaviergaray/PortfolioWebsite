@@ -2,6 +2,8 @@
 This website is made with the purpose of learning new technologies while showcasing my skills, experiences, and credentials.
 ## Services
 There are several services intended to be ran on this website to include the following.
+- **General**
+  - *TODO:* Start script with config file
 - **NextJS Website**
   - Contains the website intended to be seen by potential employers and communicate with other services in this repository
   - Written with NextJS, Typescript, and occasionally Tailwind CSS
@@ -11,8 +13,9 @@ There are several services intended to be ran on this website to include the fol
     - Capabilities
       - Describe frameworks/tech stacks that could solve a problem
       - Draw PlantUML diagram related to the suggestions
+      - Implement RAG to offer C++ specific suggestions
       - *TODO:* Provide commenting for existing source code
-      - *TODO:* Implement RAG to offer C++ specific suggestions
+      - *TODO:* Implement chat history function
 - **nginx**
   - A proxy server to be able to have more control over how requests are routed
 - **Matomo**

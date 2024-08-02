@@ -1,6 +1,6 @@
 'use client'
 import styles from "./ui/page.module.css";
-import React, { FormEvent, useState } from 'react'
+import React, {FormEvent, useEffect, useState} from 'react'
 import EmblaCarousel from '@/components/carousel'
 import dynamic from "next/dynamic"
 import { FaPython, FaJava, FaAws, FaGitSquare, FaDocker, FaLinux, FaBug, FaCloud } from 'react-icons/fa';
@@ -18,12 +18,15 @@ import Projects, { Project } from "@/components/project";
 import Modal from "react-modal";
 import ReactMarkdown from 'react-markdown';
 import PlantUML from 'react-plantuml';
-import { push } from '@socialgouv/matomo-next';
+import {init, push} from '@socialgouv/matomo-next';
 
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
     ssr: false
 })
+
+const MATOMO_URL = process.env.NEXT_PUBLIC_MATOMO_URL!;
+const MATOMO_SITE_ID = process.env.NEXT_PUBLIC_MATOMO_SITE_ID!;
 
 export default function Home() {
     if (typeof window !== 'undefined') {
@@ -32,8 +35,7 @@ export default function Home() {
 
     const navbarButtons = ["About Me", "Skills", "Experience", "Projects", "Education and Certifications"];
 
-    const apiEndpoints = ["framework", "cpp"];
-    const apiEndpointDisplayName = ["Framework", "C++"];
+    const [apiEndpointDisplayNames, setDisplayNames] = useState(["Framework"]);
     const apiEndpointExample = ["Inventory Management System.", "How do I create a class?"];
 
     const apiModelsDisplayName = ["OpenAI GPT 3.5", "Local Ollama Mistral"]; // Ensure to update app/route.tsx
@@ -46,8 +48,32 @@ export default function Home() {
     const [endpoint, setEndpoint] = useState(0);
     const [model, setModel] = useState(0);
 
+    useEffect(() => {
+        init({
+            url: MATOMO_URL,
+            siteId: MATOMO_SITE_ID,
+            disableCookies: true,
+        });
+
+
+        const fetchData = async () => {
+            try {
+                let res = await fetch(`http://localhost/api`, { cache: 'no-store' });
+                let data = await res.json();
+                let topics = data.response.split(',');
+                topics.unshift('Framework');
+                setDisplayNames(topics);
+                console.log(topics);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     const handleClickAPIEndpoint = () => {
-        setEndpoint((endpoint + 1) % apiEndpoints.length);
+        setEndpoint((endpoint + 1) % apiEndpointDisplayNames.length);
     }
 
     const handleClickAPIModel = () => {
@@ -61,7 +87,7 @@ export default function Home() {
         setResponse('Retrieving API Response...')
 
         if (typeof window !== 'undefined') {
-            push(['trackEvent', 'api call', apiEndpointDisplayName[endpoint]]);
+            push(['trackEvent', 'api call', apiEndpointDisplayNames[endpoint]]);
         }
 
         const res = await fetch('http://localhost/api', {
@@ -69,8 +95,8 @@ export default function Home() {
             body: JSON.stringify({
                 user: user,
                 message: message,
-                apiEndpoint: apiEndpoints[endpoint],
                 apiModel: model,
+                topic: apiEndpointDisplayNames[endpoint]
             })
         });
 
@@ -78,8 +104,28 @@ export default function Home() {
 
         console.log(data);
 
-        setResponse(data.textualResponse);
-        setUml(data.umlResponse);
+        // Query the database for the response
+        const responseId = data[0].response_id;
+
+        let dbRes = await fetch(`http://localhost/api?ep=query&id=${responseId}`, { cache: 'no-store' });
+        let dbData = await dbRes.json();
+        while (dbData.error != null) {
+            setResponse('Retrieving API Response')
+            await new Promise(resolve => setTimeout(resolve, 750));
+            setResponse('Retrieving API Response.')
+            await new Promise(resolve => setTimeout(resolve, 750));
+            setResponse('Retrieving API Response..')
+            await new Promise(resolve => setTimeout(resolve, 750));
+            setResponse('Retrieving API Response...')
+            await new Promise(resolve => setTimeout(resolve, 750));
+            dbRes = await fetch(`http://localhost/api?ep=query&id=${responseId}`, { cache: 'no-store' });
+            dbData = await dbRes.json();
+        }
+
+        console.log(dbData);
+
+        setResponse(dbData.textualResponse);
+        setUml(dbData.umlResponse);
     };
 
     enum FlexDirection {
@@ -352,7 +398,7 @@ export default function Home() {
                                                     model!</p>
                                                 <div className={"flex flex-row w-3/4 justify-around"}>
                                                     <button type="button" onClick={handleClickAPIEndpoint}
-                                                            className={"w-1/4 p-2 rounded bg-cyan-700 text-white"}>{apiEndpointDisplayName[endpoint]}</button>
+                                                            className={"w-1/4 p-2 rounded bg-cyan-700 text-white"}>{apiEndpointDisplayNames[endpoint]}</button>
                                                     <button type="button" onClick={handleClickAPIModel}
                                                             className={"w-1/4 p-2 rounded bg-cyan-700 text-white"}>{apiModelsDisplayName[model]}</button>
                                                 </div>
@@ -361,7 +407,7 @@ export default function Home() {
                                             <p>Hello! My name is AIDEN. As a systems and software consultant, my task is
                                                 to recommend a technology stack to satisfy your requirements. What would
                                                 you like to build?</p>
-                                            <p>You can say things like <q>{apiEndpointExample[endpoint]}</q> If you are
+                                            <p>You can say things like <q>{apiEndpointExample[endpoint == 0 ? 0 : 1]}</q> If you are
                                                 unhappy with the response, try asking again!</p>
                                             <div className={"w-full bg-amber-50 h-0.5"}></div>
                                             <div className={"flex flex-row gap-4"}>

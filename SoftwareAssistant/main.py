@@ -1,27 +1,46 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
-from openai import OpenAI
-from conf import OPENAI_ORGANIZATION_ID, OPENAI_PROJECT_ID
+from langchain_community.llms.ollama import Ollama
+from conf import DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME
+import json
 from pydantic import BaseModel
 from typing import Optional
-from RAG.query import query_rag
+from RAG.query import query_rag, query_framework
+import mysql.connector
+from RAG.populate_database import RAG_TOPICS
 
+
+# Establish a connection to the MySQL server
+db = mysql.connector.connect(
+    host=DATABASE_HOST,
+    user=DATABASE_USER,
+    password=DATABASE_PASSWORD,
+    database=DATABASE_NAME
+)
+
+# Create a cursor object
+cursor = db.cursor()
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS responses (
+    client_host VARCHAR(255),
+    response_id INT,
+    response TEXT,
+    PRIMARY KEY (client_host, response_id)
+)
+""")
 
 # Prepare FastAPI app with Cross Origin Resource Sharing
+origins = [
+    "http://portfolio-website"
+    "http://localhost",
+]
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=['*'],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-)
-
-
-# Connect to OpenAI client
-client = OpenAI(
-    organization=OPENAI_ORGANIZATION_ID,
-    project=OPENAI_PROJECT_ID,
 )
 
 
@@ -31,7 +50,7 @@ ai_models = {
     "cheaper": "gpt-3.5-turbo",
     "expensive": "gpt-4o",
     "most-expensive": "gpt-4-turbo",
-    "RAG-Mistral": "mistral"
+    "mistral": "mistral"
 }
 
 
@@ -39,112 +58,109 @@ class Item(BaseModel):
     user: Optional[str] = 'blank_user'
     message: str
     model: str
+    topic: Optional[str] = 'framework'
 
 
-# Route used for testing whether the API is in working and taking connections
+def get_response_id(client_host):
+    cursor.execute(f"SELECT response_id FROM responses WHERE client_host = '{client_host}'")
+    response_ids = cursor.fetchall()
+    response_id = 0
+    for id in response_ids:
+        response_id = max(id[0] + 1, response_id)
+    return response_id
+
+
+#====== Background Tasks ======
+def query_ai_framework(item: Item, client_host, response_id):
+    response = query_framework(query_text=item.message, query_user=item.user, query_model=item.model)
+    commit_to_db(client_host, response_id, response)
+
+
+def query_ai_rag(item: Item, client_host, response_id):
+    response, _ = query_rag(query_text=item.message, query_model=item.model, category=item.topic)
+    commit_to_db(client_host, response_id, {"textualResponse": str(response)})
+
+
+def commit_to_db(client_host, response_id, response_dict):
+    response_json = json.dumps(response_dict)
+    sql = "INSERT INTO responses (client_host, response_id, response) VALUES (%s, %s, %s)"
+    val = (client_host, response_id, response_json)
+    cursor.execute(sql, val)
+    db.commit()
+
+
+#====== API Routes ======
+# Route used for testing whether the API is in working condition and taking connections
 @app.get('/gpt-api/test')
 def test_message():
     return {"response": "GET Request Successful" if OPENAI_ORGANIZATION_ID is not None else "Error: No OpenAI Organization ID found."}
 
 
-# Route to communicate with the API and receive framework suggestions
-@app.post('/gpt-api/suggestions/framework')
-def framework_message_to_api(item: Item):
+# Route used for testing whether the API has a working, established DB connection
+@app.get('/gpt-api/test/db')
+def test_db():
+    try:
+        # Try to get the server version
+        cursor.execute("SELECT VERSION()")
+        result = cursor.fetchone()
+        if result is None:
+            return {"error": "Unable to connect to the database"}
+        else:
+            return {"response": f"Connected to MySQL server at {DATABASE_HOST}, version: {result[0]}"}
+    except Exception as e:
+        return {"error": f"An error occurred: {str(e)}"}
+
+
+# Route to get the available categories
+@app.get('/gpt-api/RAG/categories')
+def get_rag_categories():
+    response = RAG_TOPICS[0]
+    for topic in RAG_TOPICS[1:]:
+        response += ',' + topic
+    return {"response": response}
+
+
+# Route to communicate with the API and receive suggestions
+@app.post('/gpt-api/suggestions/')
+def suggestions_cpp_to_api(item: Item, request: Request, background_tasks: BackgroundTasks):
     if not item.message:
         return {"error": 'No message provided'}, 400
 
     try:
-        stream = client.chat.completions.create(
-            model=ai_models['cheapest'],
-            messages=
-            [
-                {
-                    "role": "system",
-                    "content": "Your name is Aiden."
-                               "As a systems and software consultant, your task is to recommend a technology stack that will "
-                               "meet all the necessary engineering requirements."
-                               "You are expected to suggest a suitable framework."
-                               "Write it within a section labeled ### FRAMEWORK ### at the start "
-                               "and ### ENDFRAMEWORK ### at the end."
-                               "Also create a PlantUML diagram should serve as a clear guide for engineers to develop the program."
-                               "Make sure it has arrows connecting different components where necessary."
-                },
-                {
-                    "role": "user",
-                    "content": item.message,
-                }
-            ],
-            stream=True,
-            temperature=0.2,
-            user=item.user,
-        )
-
-        response = ''
-        for chunk in stream:
-            if chunk.choices[0].delta.content is not None:
-                response += chunk.choices[0].delta.content
-
-        # Extract the framework section
-        startText = response.find('### FRAMEWORK ###')
-        endText = response.find('### ENDFRAMEWORK ###')
-        textualResponse = response[startText + 17 : endText].strip()
-
-        # Extract the UML section
-        startUml = response.find('@startuml')
-        endUml = response.find('@enduml')
-        umlResponse = response[startUml : endUml + 7].strip()
-
-        return {"textualResponse": textualResponse, "umlResponse": umlResponse}
-
+        client_host = request.client.host
+        response_id = get_response_id(client_host)
+        background_tasks.add_task(query_ai_framework if item.topic == 'Framework' else query_ai_rag, item, client_host, response_id)
+        return {"message": 'Request sent.', "response_id": response_id}, 202
     except Exception as e:
-        return {"error": 'An error occurred: {}'.format(str(e))}, 500
-
-
-# Route to communicate with the API and receive programming suggestions
-@app.post('/gpt-api/suggestions/cpp')
-def suggestions_cpp_to_api(item: Item):
-    if not item.message:
-        return {"error": 'No message provided'}, 400
-
-    response, _ = query_rag(item.message, item.model) if item.model else query_rag(item.message)
-
-    return {"textualResponse": response.content}
+            return {"error": 'An error occurred: {}'.format(str(e))}, 500
 
 
 # Route to communicate with the API and receive comments within code
 @app.post('/gpt-api/suggestions/comments')
 def comments_message_to_api(item: Item):
-    if not item.message:
-        return {"error": 'No message provided'}, 400
+    pass
 
-    stream = client.chat.completions.create(
-        model=ai_models['cheapest'],
-        messages=
-        [
-            {
-                "role": "system",
-                "content": "Your name is Aiden."
-                           "As a systems and software consultant, your task is to recommend a technology stack that will "
-                           "meet all the necessary engineering requirements."
-                           "You are expected to suggest a suitable framework."
-                           "Write it within a section labeled ### FRAMEWORK ### at the start "
-                           "and ### ENDFRAMEWORK ### at the end."
-                           "Also create a PlantUML diagram should serve as a clear guide for engineers to develop the program."
-                           "Make sure it has arrows connecting different components where necessary."
-            },
-            {
-                "role": "user",
-                "content": item.message,
-            }
-        ],
-        stream=True,
-        temperature=0.2,
-        user=item.user,
-    )
 
-    response = ''
-    for chunk in stream:
-        if chunk.choices[0].delta.content is not None:
-            response += chunk.choices[0].delta.content
+# Route to get the response from a query
+@app.get('/gpt-api/response/{response_id}')
+def get_response(response_id: str, request: Request):
+    client_host = request.client.host
+    cursor.execute("SELECT response FROM responses WHERE client_host = %s AND response_id = %s", (client_host, response_id))
+    result = cursor.fetchone()
+    if result is None:
+        return {"error": "no response with the requested ID"}
+    response_dict = json.loads(result[0])
+    return response_dict
 
-    return {"response": response}
+
+def main():
+    query = input("Enter your custom query: ")
+    try:
+        cursor.execute(query)
+        print(cursor.fetchall())
+    except Exception as e:
+        return {"error": 'An error occurred: {}'.format(str(e))}, 500
+
+
+if __name__ == '__main__':
+    main()

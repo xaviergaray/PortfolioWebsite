@@ -12,6 +12,7 @@ services:
       - matomo
       - db
 
+
   portfolio-website:
     build: ./PortfolioWebsite
     environment:
@@ -40,9 +41,11 @@ services:
       - .env
     depends_on:
       - ollama-embedding
+      - db
+
 
   matomo:
-    image: matomo
+    build: matomo
     volumes:
       - matomo:/var/www/html
     environment:
@@ -54,10 +57,10 @@ services:
     image: mysql:5.7
     command: --max-allowed-packet=64MB
     environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: matomo
-      MYSQL_USER: matomo
-      MYSQL_PASSWORD: matomo
+      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_USER: ${DATABASE_USER}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
       - db:/var/lib/mysql
 

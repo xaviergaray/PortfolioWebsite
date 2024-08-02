@@ -1,20 +1,30 @@
 'use server'
 import { NextResponse } from "next/server";
 
-export async function GET() {
-    return NextResponse.json({message: "GET Request Successful"});
+export async function GET(req: Request) {
+    const { searchParams } = new URL(req.url)
+    const endpoint = searchParams.get('ep');
+    const id = searchParams.get('id')
+    const res = await fetch(endpoint == 'query' ? `http://aiden:8000/gpt-api/response/${id}` : 'http://aiden:8000/gpt-api/RAG/categories', {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    const product = await res.json()
+
+    return NextResponse.json(product)
 }
 
 export async function POST(req: Request) {
     const data = await req.json();
-    const apiModelsToEndpoint = ["gpt-3.5-turbo-0125", "RAG-mistral"];
+    const apiModelsToEndpoint = ["gpt-3.5-turbo-0125", "mistral"];
 
     if (data.apiModel >= apiModelsToEndpoint.length) {
         return NextResponse.json({error: 'Invalid model number'})
     }
 
     try {
-        const response = await fetch(`http://aiden:8000/gpt-api/suggestions/${data.apiEndpoint}`, {
+        const response = await fetch(`http://aiden:8000/gpt-api/suggestions/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -23,6 +33,7 @@ export async function POST(req: Request) {
                 user: data.user,
                 message: data.message,
                 model: apiModelsToEndpoint[data.apiModel],
+                topic: data.topic,
             })
         });
 
