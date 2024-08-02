@@ -45,7 +45,7 @@ services:
 
 
   matomo:
-    build: matomo
+    image: matomo
     volumes:
       - matomo:/var/www/html
     environment:
