@@ -246,6 +246,8 @@ export default function Home() {
                                         <p>This website is the simple version of the dev version where I create a FastAPI service combined with large language models (listed below as AIDEN), Docker containers, and Nginx to test different technologies together.</p>
                                             <p>To view the source code of both this website and the locally run version, visit <a
                                             href="https://github.com/xaviergaray/PortfolioWebsite"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
                                             className={"text-blue-200 hover:text-blue-700"}>this</a> Github page!</p>
                                     </div>
                                 </Project>
@@ -267,6 +269,8 @@ export default function Home() {
                                         </div>
                                         <p className={"w-11/12 text-center text-xs italic"}>*AIDEN runs on a local machine, however, the source code can be found
                                             <a href="https://github.com/xaviergaray/PortfolioWebsite/tree/main/SoftwareAssistant"
+                                               target="_blank"
+                                               rel="noopener noreferrer"
                                             className={"text-blue-200 hover:text-blue-700"}> here</a>.
                                             Contact me to apply this to your project with updated OpenAI GPT or local models.</p>
                                     </div>
@@ -614,7 +618,85 @@ export default function Home() {
 
                 <div className={styles.sections}
                      style={{background: "linear-gradient(180deg, #FFFFFF 20%, #D0D199 100%)"}}>
-                    <div className={styles.skillsContent}>
+                    <div>
+                        <Projects>
+                            <Project
+                                title="Portfolio Website"
+                            >
+                                <div>
+                                    <p>Designed, programmed, and configured this website to showcase my experiences.</p>
+                                    <br/>
+                                    <p>This website is the simple version of the dev version where I create a FastAPI
+                                        service combined with large language models (listed below as AIDEN), Docker
+                                        containers, and Nginx to test different technologies together.</p>
+                                    <br/>
+                                    <p>To view the source code of both this website and the locally run version,
+                                        visit <a
+                                            href="https://github.com/xaviergaray/PortfolioWebsite"
+                                            className={"text-blue-200 hover:text-blue-700"}>this</a> Github page!</p>
+                                </div>
+                            </Project>
+                            <Project
+                                title="AI Development Engineer Navigator"
+                            >
+                                <div className={"flex flex-col items-center gap-8"}>
+                                    <div>
+                                        <p>Programmed an AI chatbot API to serve as a consultant for any engineer
+                                            designing
+                                            a
+                                            system.</p>
+                                        <br/>
+                                        <p>AIDEN is designed to help engineers stay ahead of the curve by providing
+                                            recommendations for how the system should be structured, allowing the
+                                            engineer
+                                            to perform targeted research instead of shooting in the dark</p>
+                                    </div>
+                                    <p className={"w-11/12 text-center text-xs italic"}>*AIDEN runs on a local machine,
+                                        however, the source code can be found
+                                        <a href="https://github.com/xaviergaray/PortfolioWebsite/tree/main/SoftwareAssistant"
+                                           className={"text-blue-200 hover:text-blue-700"}> here</a>.
+                                        Contact me to apply this to your project with updated OpenAI GPT or local
+                                        models.</p>
+                                </div>
+                            </Project>
+
+                            <Project
+                                title="Home Lab"
+                            >
+                                <p>Leveraging the power of Raspberry Pis and old computers in conjunction with managed
+                                    switches and
+                                    routers, I’ve transformed my home into a tech-savvy hub.</p>
+                                <br />
+                                <p>This includes the
+                                    implementation of a local DNS server, a Network Attached Storage (NAS) system,
+                                    version control system using Perforce,
+                                    and the deployment of private web applications for my family’s use.</p>
+                                <br />
+                                <p>To ensure secure and convenient access, all these features are equipped with
+                                    remote connectivity via SSH and run smoothly with PowerShell and Bash scripting.</p>
+                            </Project>
+
+                            <Project
+                                title="Multiplayer RPG Survival Indie Game"
+                            >
+                                <p>Currently developing a multiplayer RPG/survival game using Unreal Engine.</p>
+                                <br/>
+                                <p>The game will include several systems present in most, modern RPG games including
+                                    inventory, crafting, skills, and various quest lines that affect the
+                                    player&apos;s world</p>
+                            </Project>
+
+                            <Project
+                                title="Autonomous Water Collection Drone"
+                            >
+                                <p>Senior project for my Mechanical Engineering undergraduate degree. I was
+                                    responsible for part of the software responsible for the autonomous takeoff and
+                                    landing at a specified ground station.</p>
+                                <br/>
+                                <p>The project ended up winning the Best Mechanical Engineering Project award at
+                                    Rutgers University that year (2023).</p>
+                            </Project>
+                        </Projects>
                     </div>
                 </div>
 

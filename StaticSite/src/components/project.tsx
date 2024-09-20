@@ -12,30 +12,53 @@ type ProjectProps = {
 export function Project({title, photo, alt, children, link, isReversed}: Readonly<ProjectProps>) {
     return (
         <div className={`w-11/12 flex ${isReversed ? 'flex-row-reverse' : ''} justify-evenly gap-10`}>
-            <div className={"flex items-center"}>
-                {photo && alt && (
-                    <Image
-                        src={photo}
-                        width={500}
-                        height={500}
-                        alt={alt}
-                        className={"rounded-2xl border-2 border-amber-50"}
-                    />
-                )}
-            </div>
-            <div className={"w-3/5 rounded-2xl bg-indigo-500 border-2 border-indigo-800"} style={{minHeight: "20vh"}}>
-                <h2 className={"text-xl text-center mt-3"}>
-                    {link ?
-                        <a href={link} target="_blank" rel="noopener noreferrer" className={"hover:text-blue-300"}>{title}</a>
-                        :
-                        <>{title}</>
-                    }
-                </h2>
 
-                <div className={"m-5"}>
-                    {children}
-                </div>
-            </div>
+            {photo && alt ?
+                <>
+                    <div className={"flex items-center"}>
+                        <Image
+                            src={photo}
+                            width={500}
+                            height={500}
+                            alt={alt}
+                            className={"rounded-2xl border-2 border-amber-50"}
+                        />
+                    </div>
+                    <div className={"w-3/5 rounded-2xl bg-indigo-500 border-2 border-indigo-800"}
+                         style={{minHeight: "20vh"}}>
+                        <h2 className={"text-xl text-center mt-3"}>
+                            {link ?
+                                <a href={link} target="_blank" rel="noopener noreferrer"
+                                   className={"hover:text-blue-300"}>{title}</a>
+                                :
+                                <>{title}</>
+                            }
+                        </h2>
+
+                        <div className={"m-5"}>
+                            {children}
+                        </div>
+                    </div>
+                </>
+                :
+                <>
+                    <div className={"w-full rounded-2xl bg-indigo-500 border-2 border-indigo-800"}
+                         style={{minHeight: "20vh"}}>
+                        <h2 className={"text-xl text-center mt-3"}>
+                            {link ?
+                                <a href={link} target="_blank" rel="noopener noreferrer"
+                                   className={"hover:text-blue-300"}>{title}</a>
+                                :
+                                <>{title}</>
+                            }
+                        </h2>
+
+                        <div className={"m-5"}>
+                            {children}
+                        </div>
+                    </div>
+                </>
+            }
         </div>
     )
 }
