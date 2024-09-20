@@ -561,8 +561,54 @@ export default function Home() {
                 </div>
 
                 <div className={styles.sections}
-                     style={{background: "linear-gradient(180deg, #A3E3FF 20%, #FFFFFF 100%)"}}>
-                    <div className={styles.skillsContent}>
+                     style={{background: "linear-gradient(180deg, #A3E3FF 20%, #FFFFFF 100%)", height: "auto"}}>
+                    <div className={"flex flex-col justify-center items-center"}>
+                        <h1 className={"mt-10 mb-6 text-emerald-600"}>Experience</h1>
+                        <Experience company="L3Harris" link="https://www.l3harris.com">
+                            <Position title="Software Engineer, Space and Airborne Systems"
+                                      startDate={new Date("2023-06-01")}>
+                                <>Oversaw and implemented bug fixes and new features for diagnostic tools analyzing
+                                    messages within electronic warfare systems of F/A-18 series fighter jets
+                                </>
+                                <>Spearheaded and managed a project from its initial conceptualization, through the
+                                    various stages of development, and finally to its successful release and
+                                    delivery to the customer
+                                </>
+                                <>Managed the project’s database and implemented new features</>
+                            </Position>
+                        </Experience>
+
+                        <Experience company="New Jersey Army National Guard"
+                                    link="https://nationalguard.com/new-jersey">
+                            <Position title="Cyber Warfare Officer, 17A" startDate={new Date("2023-05-15")}>
+                                <>Directed cybersecurity operations in alignment with a structured strategy to
+                                    target adversary activities and capabilities
+                                </>
+                                <>Hardened servers and networks coincident with penetration testing</>
+                            </Position>
+                            <Position title="Chemical Specialist, 74D" startDate={new Date("2019-04-08")}
+                                      endDate={new Date("2023-05-14")}>
+                                <>Engaged in rigorous training sessions and practical exercises to learn and master
+                                    safety procedures and
+                                    decontamination methods
+                                </>
+                                <>Participated in team-based tasks and projects, which provided the opportunity to
+                                    lead diverse teams
+                                </>
+                            </Position>
+                        </Experience>
+
+                        <Experience company="MIT Lincoln Laboratory" link="https://www.ll.mit.edu">
+                            <Position title="Mechanical Engineering Intern" startDate={new Date("2022-07-15")}
+                                      endDate={new Date("2022-08-15")}>
+                                <>Tested material properties of silica waveguides as part of the structural and
+                                    thermal fluids group
+                                </>
+                                <>Developed various software solutions to streamline data analysis processes and
+                                    solve simulation problems
+                                </>
+                            </Position>
+                        </Experience>
                     </div>
                 </div>
 
