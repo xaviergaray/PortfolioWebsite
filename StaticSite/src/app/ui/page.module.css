@@ -78,9 +78,19 @@
   }
 
   .sections {
-    height: 90vh;
+    height: auto;
     width: 90%;
     border-radius: 15px;
+  }
+
+  .skill {
+    width: 75%;
+    margin: 5% 0;
+  }
+
+  .skillsTable {
+    height: auto;
+    margin-bottom: 10%;
   }
 }
 

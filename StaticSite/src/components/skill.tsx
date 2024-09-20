@@ -8,9 +8,11 @@ type Props = {
     title: string,
     rating: number,
     children: React.ReactNode,
+    modalWidth?: string,
+    childrenWidth?: string,
 }
 
-export default function Skill({ icon, title, rating = 0, children, }: Readonly<Props>) {
+export default function Skill({ icon, title, rating = 0, children, modalWidth = 'auto', childrenWidth = 'w-96'}: Readonly<Props>) {
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
     const fullStars = Math.floor(rating);
@@ -43,7 +45,7 @@ export default function Skill({ icon, title, rating = 0, children, }: Readonly<P
             marginRight: '50%',
             transform: "translate(-50%, -50%)",
             backgroundColor: "black",
-            width: "auto",
+            width: modalWidth,
             height: "45vh",
             display: "flex",
             flexDirection: FlexDirection.Column, // Workaround for typescript no overloaded error
@@ -60,8 +62,8 @@ export default function Skill({ icon, title, rating = 0, children, }: Readonly<P
                 <div style={{display: 'flex', justifyContent: 'center', fontSize: '0.8rem'}}>{stars}</div>
             </div>
             <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} style={modalStyle}>
-                <h1 className="text-2xl font-bold text-center text-sky-400">{title}</h1>
-                <div className="w-96">{children}</div>
+                <h1 className="text-2xl font-bold text-center text-sky-400 w-full">{title}</h1>
+                <div className={childrenWidth}>{children}</div>
                 <button className="p-2 rounded bg-cyan-700 text-white" onClick={() => setModalIsOpen(false)}>Close</button>
             </Modal>
         </>

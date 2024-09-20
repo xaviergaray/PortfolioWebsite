@@ -24,32 +24,6 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
 export default function Home() {
     const navbarButtons = ["About Me", "Skills", "Experience", "Projects", "Education and Certifications"];
 
-    enum FlexDirection {
-        Column = "column",
-    }
-
-    const modalStyle = {
-        overlay: {
-            backgroundColor: "rgba(0,0,0,0,0.6)",
-        },
-
-        content: {
-            top: "50%",
-            left: "50%",
-            right: "auto",
-            bottom: "auto",
-            marginRight: '50%',
-            transform: "translate(-50%, -50%)",
-            backgroundColor: "black",
-            width: "50vw",
-            height: "60vh",
-            display: "flex",
-            flexDirection: FlexDirection.Column, // Workaround for typescript no overloaded error
-            gap: "10%",
-            borderRadius: "15px",
-        }
-    }
-
     return (
         <main className={styles.main}>
             <MediaQuery minWidth={1120}>
@@ -419,7 +393,8 @@ export default function Home() {
                 <div className={styles.sections} style={{
                     backgroundImage: "url('/homeBackground.webp')",
                     backgroundRepeat: "no-repeat",
-                    backgroundSize: "cover"
+                    backgroundSize: "cover",
+                    height: "70vh",
                 }}>
                     <div style={{margin: "5% 0 0 5%"}}>
                         <h1 style={{fontWeight: "normal"}}>Hi, my name is Xavier.</h1>
@@ -430,15 +405,157 @@ export default function Home() {
                 </div>
 
                 <div className={styles.sections}
-                     style={{background: "linear-gradient(180deg, #010101 20%, #A3E3FF 100%)"}}>
+                     style={{background: "linear-gradient(180deg, #010101 20%, #379bc8 100%)", height:"auto"}}>
                     <div className={styles.skillsContent}>
                         <h1>Skills</h1>
+                        <p className={"italic m-0"}>Select skill cards to learn more.</p>
                         <div className={styles.skillsTable}>
-                            <div className={styles.skillsRow}>
-                                <div className={styles.skill}>
+                            <Skill icon={<PiFileCpp/>} title="C/C++" rating={4} modalWidth="80vw"
+                                   childrenWidth="w-full">
+                                <h1 className="text-xl font-bold text-gray-200">4 years of experience</h1>
+                                <br/>
+                                <ul className={"list-disc list-inside"}>
+                                    <li>Graphical User Interfaces (GUI)</li>
+                                    <li>Database management systems</li>
+                                    <li>Networking systems</li>
+                                    <li>Unreal Engine indie game developer</li>
+                                </ul>
+                            </Skill>
+                            <Skill icon={<DiDotnet/>} title="C#/.NET" rating={4} modalWidth="80vw"
+                                   childrenWidth="w-full">
+                                <h1 className="text-xl font-bold text-gray-200">2 years of experience</h1>
+                                <br/>
+                                <ul className={"list-disc list-inside"}>
+                                    <li>Graphical User Interfaces (GUI)</li>
+                                    <li>Database management systems</li>
+                                    <li>.NET Scripting for Windows System Administration</li>
+                                </ul>
+                            </Skill>
+                            <Skill icon={<FaPython/>} title="Python" rating={3.5} modalWidth="80vw"
+                                   childrenWidth="w-full">
+                                <h1 className="text-xl font-bold text-gray-200">3 years of experience</h1>
+                                <br/>
+                                <ul className={"list-disc list-inside"}>
+                                    <li>Data mining</li>
+                                    <li>Graphical User Interfaces (GUI)</li>
+                                    <li>Database management systems</li>
+                                    <li>Web Services</li>
+                                    <li>Networking systems</li>
+                                    <li>Pandas, Matplotlib, NumPy, Django, Flask, OpenCV, sqlite3, and more!</li>
+                                </ul>
+                            </Skill>
+                            <Skill icon={<FaJava/>} title="Java" rating={3.5} modalWidth="80vw" childrenWidth="w-full">
+                                <h1 className="text-xl font-bold text-gray-200">2 years of experience</h1>
+                                <br/>
+                                <ul className={"list-disc list-inside"}>
+                                    <li>Web Services</li>
+                                    <li>Graphical User Interfaces (GUI)</li>
+                                    <li>Database management systems</li>
+                                    <li>Networking systems</li>
+                                </ul>
+                            </Skill>
 
-                                </div>
-                            </div>
+                            <Skill icon={<RiNextjsLine/>} title="NextJS" rating={3} modalWidth="80vw"
+                                   childrenWidth="w-full">
+                                <h1 className="text-xl font-bold text-gray-200">2 years of experience</h1>
+                                <br/>
+                                <ul className={"list-disc list-inside"}>
+                                    <li>Full stack development in conjunction with Python libraries and
+                                        SQL/NoSQL Servers
+                                    </li>
+                                </ul>
+                            </Skill>
+                            <Skill icon={<FiDatabase/>} title="SQL/NoSQL" rating={4} modalWidth="80vw"
+                                   childrenWidth="w-full">
+                                <h1 className="text-xl font-bold text-gray-200">4 years of experience</h1>
+                                <br/>
+                                <ul className={"list-disc list-inside"}>
+                                    <li>Managed production, development, and distribution of databases in
+                                        classified environments
+                                    </li>
+                                </ul>
+                            </Skill>
+                            <Skill icon={<FaGitSquare/>} title="Git" rating={3.5} modalWidth="80vw" childrenWidth="w-full">
+                                    <h1 className="text-xl font-bold text-gray-200">4 years of experience</h1>
+                                </Skill>
+                                <Skill icon={<FaAws/>} title="AWS" rating={2.5} modalWidth="80vw" childrenWidth="w-full">
+                                    <h1 className="text-xl font-bold text-gray-200">1 year of experience</h1>
+                                </Skill>
+
+                                <Skill icon={<FaDocker/>} title="Docker" rating={3.5} modalWidth="80vw" childrenWidth="w-full">
+                                    <h1 className="text-xl font-bold text-gray-200">1.5 years of experience</h1>
+                                </Skill>
+                            <Skill icon={<VscTerminalPowershell/>} title="Windows PowerShell" rating={4}
+                                   modalWidth="80vw" childrenWidth="w-full">
+                                <h1 className="text-xl font-bold text-gray-200">3 years of experience</h1>
+                                <br/>
+                                <ul className={"list-disc list-inside"}>
+                                    <li>GIAC Certified Windows System Administrator</li>
+                                    <li>DevOps</li>
+                                    <li>PKI</li>
+                                    <li>Bitlocker</li>
+                                    <li>Group Policy Management</li>
+                                </ul>
+                            </Skill>
+                            <Skill icon={<FaLinux/>} title="Linux" rating={3.5} modalWidth="80vw"
+                                   childrenWidth="w-full">
+                                <h1 className="text-xl font-bold text-gray-200">5.5 years of experience</h1>
+                                <br/>
+                                <ul className={"list-disc list-inside"}>
+                                    <li>DevOps</li>
+                                    <li>PKI</li>
+                                    <li>Bash Scripting</li>
+                                </ul>
+                            </Skill>
+                            <Skill icon={<MdOutlineSecurity/>} title="Network Security" rating={4} modalWidth="80vw"
+                                   childrenWidth="w-full">
+                                <h1 className="text-xl font-bold text-gray-200">4 years of experience</h1>
+                                <br/>
+                                <ul className={"list-disc list-inside"}>
+                                    <li>GIAC Certified Windows System Administrator</li>
+                                    <li>GIAC Reverse Engineering Malware</li>
+                                    <li>CompTIA Network+</li>
+                                    <li>CompTIA Security+</li>
+                                </ul>
+                            </Skill>
+
+                            <Skill icon={<SiUnrealengine/>} title="Unreal Engine" rating={4} modalWidth="80vw"
+                                   childrenWidth="w-full">
+                                <h1 className="text-xl font-bold text-gray-200">3.5 years of experience</h1>
+                                <br/>
+                                <ul className={"list-disc list-inside"}>
+                                    <li>Indie multiplayer game development</li>
+                                    <li>Graphical User Interfaces (GUI)</li>
+                                </ul>
+                            </Skill>
+                            <Skill icon={<FaBug/>} title="Malware Analysis" rating={4} modalWidth="80vw" childrenWidth="w-full">
+                                    <h1 className="text-xl font-bold text-gray-200 text-center">2 years of experience</h1>
+                                    <br />
+                                    <ul className={"text-sm list-disc list-inside"}>
+                                        <li>GIAC Certified Windows System Administrator</li>
+                                        <li>GIAC Reverse Engineering Malware</li>
+                                    </ul>
+                                </Skill>
+                            <Skill icon={<RiDeviceRecoverLine/>} title="Incident Response" rating={4} modalWidth="80vw"
+                                   childrenWidth="w-full">
+                                <h1 className="text-xl font-bold text-gray-200">4 years of experience</h1>
+                                <br/>
+                                <ul className={"list-disc list-inside"}>
+                                    <li>GIAC Certified Windows System Administrator</li>
+                                    <li>CompTIA Network+</li>
+                                    <li>CompTIA Security+</li>
+                                </ul>
+                            </Skill>
+                            <Skill icon={<FaCloud/>} title="Cloud Integration" rating={3} modalWidth="80vw"
+                                   childrenWidth="w-full">
+                                <h1 className="text-xl font-bold text-gray-200">1 years of experience</h1>
+                                <br/>
+                                <ul className={"list-disc list-inside"}>
+                                    <li>AWS</li>
+                                    <li>Azure</li>
+                                </ul>
+                            </Skill>
+
                         </div>
                     </div>
                 </div>
