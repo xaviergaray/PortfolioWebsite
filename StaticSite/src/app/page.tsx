@@ -702,15 +702,67 @@ export default function Home() {
 
                 <div className={styles.sections}
                      style={{background: "linear-gradient(180deg, #D0D199 20%, #425F40 100%)"}}>
-                    <div className={styles.skillsContent}>
+                    <div className={"flex justify-center align-middle m-3 mb-20"}>
+                        <Education mobile={true}>
+                            <School
+                                issuingOrganization="New Jersey Institute of Technology"
+                                organizationLink="https://www.njit.edu"
+                                title="M.S. Computer Science"
+                                startDate={new Date("2023-09-13")}
+                                graduationDate={new Date("2024-12-28")}
+                                mobile={true}>
+                            </School>
+
+                            <School
+                                issuingOrganization="Rutgers University- New Brunswick"
+                                organizationLink="https://www.rutgers.edu"
+                                title="B.S. Mechanical Engineering"
+                                startDate={new Date("2020-01-21")}
+                                graduationDate={new Date("2023-05-15")}
+                                mobile={true}>
+                                <>Summa Cum Laude</>
+                                <>Awarded Best Mechanical Engineering Project</>
+                            </School>
+
+                            <Certification
+                                issuingOrganization={"Global Information Assurance Certification (GIAC)"}
+                                organizationLink={"https://www.giac.org"}
+                                title={"GIAC Certified Windows Security Administrator (GCWN)"}
+                                certLink={"https://www.giac.org/certifications/certified-windows-security-administrator-gcwn/"}>
+                            </Certification>
+
+                            <Certification
+                                issuingOrganization={"Global Information Assurance Certification (GIAC)"}
+                                organizationLink={"https://www.giac.org"}
+                                title={"GIAC Reverse Engineering Malware (GREM)"}
+                                certLink={"https://www.giac.org/certifications/reverse-engineering-malware-grem/"}>
+                            </Certification>
+
+                            <Certification
+                                issuingOrganization={"Project Management Institute (PMI)"}
+                                organizationLink={"https://www.giac.org"}
+                                title={"Certified Associate in Project Management (CAPM)"}
+                                certLink={"https://www.pmi.org/certifications/certified-associate-capm"}>
+                            </Certification>
+
+                            <Certification
+                                issuingOrganization={"CompTIA"}
+                                organizationLink={"https://www.comptia.org"}
+                                title={"CompTIA Security+"}
+                                certLink={"https://www.comptia.org/certifications/security"}>
+                            </Certification>
+
+                            <Certification
+                                issuingOrganization={"CompTIA"}
+                                organizationLink={"https://www.comptia.org"}
+                                title={"CompTIA Network+"}
+                                certLink={"https://www.comptia.org/certifications/network"}>
+                            </Certification>
+                        </Education>
                     </div>
                 </div>
 
-                <div className={styles.sections}
-                     style={{background: "linear-gradient(180deg, #425F40 20%, #000000 100%)"}}>
-                    <div className={styles.skillsContent}>
-                    </div>
-                </div>
+
             </MediaQuery>
         </main>
     );
